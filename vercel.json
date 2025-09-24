@@ -81,6 +81,10 @@
   ],
   "installCommand": "npm install --legacy-peer-deps",
   "buildCommand": "npm run build",
-  "framework": "vite",
-  "outputDirectory": "dist"
+  "framework": null,
+  "outputDirectory": "dist",
+  "functions": {},
+  "env": {
+    "NPM_CONFIG_PACKAGE_LOCK": "false"
+  }
 }
