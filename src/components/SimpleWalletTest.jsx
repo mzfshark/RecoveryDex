@@ -9,9 +9,15 @@ const SimpleWalletTest = () => {
     if (typeof window.ethereum !== 'undefined') {
       try {
         setStatus('connecting');
+        // Avoid triggering permission request while AppKit modal may be open
         const accounts = await window.ethereum.request({ 
-          method: 'eth_requestAccounts' 
+          method: 'eth_accounts' 
         });
+        if (!accounts?.length) {
+          // fallback explicit request only if user pressed this button intentionally
+          const req = await window.ethereum.request({ method: 'eth_requestAccounts' });
+          accounts[0] = req?.[0]
+        }
         setAccount(accounts[0]);
         setStatus('connected');
         console.log('[SimpleTest] Connected:', accounts[0]);

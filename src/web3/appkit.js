@@ -24,9 +24,10 @@ const HARMONY = {
 }
 
 let initialized = false
+let appKitInstance = null
 
 export function initAppKit() {
-  if (initialized) return
+  if (initialized && appKitInstance) return appKitInstance
   // With vite --mode dev, variables from .env.dev are exposed in import.meta.env
   const projectId = import.meta.env.VITE_REOWN_PROJECT_ID
   if (!projectId || projectId === 'placeholder_project_id' || projectId === 'demo_project_id') {
@@ -48,15 +49,17 @@ export function initAppKit() {
 
   // 1) Cria o AppKit com adaptador Ethers
   try {
-    createAppKit({
+    appKitInstance = createAppKit({
       adapters: [new EthersAdapter()],
       networks: [HARMONY],
       projectId,
       metadata,
-      // customRpcUrls opcional removido para isolar erro; usar rpcUrls acima
       features: {
-        analytics: true
-      }
+        analytics: false
+      },
+      enableWalletConnect: true,
+      enableInjected: true,
+      enableEIP6963: true
     })
   } catch (error) {
     console.error('[AppKit] Failed to initialize:', error)
@@ -64,4 +67,9 @@ export function initAppKit() {
   }
 
   initialized = true
+  return appKitInstance
+}
+
+export function getAppKitInstance() {
+  return appKitInstance
 }
