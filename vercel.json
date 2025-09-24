@@ -79,8 +79,9 @@
       "destination": "https://whostler.com/api/$1" 
     }
   ],
-  "installCommand": "npm install",
+  "installCommand": "npm install --legacy-peer-deps",
   "buildCommand": "npm run build",
   "framework": "vite",
-  "outputDirectory": "dist"
+  "outputDirectory": "dist",
+  "nodeVersion": "18.x"
 }
