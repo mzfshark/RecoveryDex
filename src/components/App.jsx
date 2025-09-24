@@ -23,6 +23,7 @@ import { setNotificationManager } from '../services/notificationService';
 
 // Debug utilities
 import '../debug/env-check.js';
+import '../debug/appkit-exports.js';
 
 // Pages
 import Home from '../pages/home';

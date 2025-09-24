@@ -1,12 +1,12 @@
 // src/components/WalletConnect.jsx
 import React, { useEffect, useCallback, useState } from "react";
-import { useAppKitAccount, useAppKitModal } from '@reown/appkit/react';
+import { useAppKitAccount } from '@reown/appkit/react';
 import { debugAppKit } from '../web3/appkit';
+import SimpleWalletTest from './SimpleWalletTest';
 import styles from "../styles/Global.module.css";
 
 const WalletConnect = () => {
   const { address, isConnected, status } = useAppKitAccount();
-  const { open } = useAppKitModal();
   const [debugInfo, setDebugInfo] = useState(null);
 
   // Debug information
@@ -19,7 +19,17 @@ const WalletConnect = () => {
   // Manual connect fallback
   const handleConnect = useCallback(() => {
     try {
-      open();
+      // Try to trigger AppKit button click
+      const appkitButton = document.querySelector('appkit-button');
+      if (appkitButton) {
+        appkitButton.click();
+      } else {
+        // Fallback to direct wallet connection
+        if (typeof window !== 'undefined' && window.ethereum) {
+          window.ethereum.request({ method: 'eth_requestAccounts' })
+            .catch(err => console.error('[WalletConnect] Direct connection failed:', err));
+        }
+      }
     } catch (error) {
       console.error('[WalletConnect] Failed to open modal:', error);
       // Fallback to direct wallet connection
@@ -28,7 +38,7 @@ const WalletConnect = () => {
           .catch(err => console.error('[WalletConnect] Direct connection failed:', err));
       }
     }
-  }, [open]);
+  }, []);
 
   return (
     <div className={styles.walletContainer}>
@@ -54,9 +64,18 @@ const WalletConnect = () => {
           <button 
             onClick={handleConnect}
             className={styles.fallbackButton}
-            style={{ marginLeft: '10px', display: status === 'reconnecting' ? 'block' : 'none' }}
+            style={{ 
+              marginLeft: '10px', 
+              display: (status === 'reconnecting' || status === 'connecting') ? 'block' : 'none',
+              padding: '8px 16px',
+              backgroundColor: '#007bff',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer'
+            }}
           >
-            Connect Manually
+            Connect Wallet
           </button>
         </div>
       )}
@@ -65,6 +84,9 @@ const WalletConnect = () => {
       <div className={styles.statusIndicator}>
         Status: {status || 'unknown'}
       </div>
+
+      {/* Simple wallet test for debugging */}
+      {import.meta.env.DEV && <SimpleWalletTest />}
     </div>
   );
 };
