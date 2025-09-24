@@ -3,12 +3,12 @@
 layout: home
 
 hero:
-  name: "RecoverySwap"
+  name: "RecoveryDex"
   text: "Aggregator Documentation"
   tagline: "Comprehensive guide for depegged token recovery and DEX aggregation"
   image:
     src: /logo512.png
-    alt: RecoverySwap Logo
+    alt: RecoveryDex Logo
   actions:
     - theme: brand
       text: Get Started
