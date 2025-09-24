@@ -1,0 +1,47 @@
+{
+  "name": "aggregator-multisplit",
+  "version": "1.0.0",
+  "description": "A project for multi-split token swaps using intermediate tokens to reduce slippage.",
+  "main": "scripts/deploy.js",
+  "scripts": {
+    "compile": "hardhat --config hardhat.config.js compile",
+    "test": "hardhat --config hardhat.config.js test",
+    "coverage": "COVERAGE=true hardhat --config hardhat.config.js coverage",
+    "deploy": "ENV_FILE=production hardhat --config hardhat.config.js run scripts/deploy.js --network harmony",
+    "deploy:testnet": "ENV_FILE=dev hardhat --config hardhat.config.js run scripts/deploy.js --network harmonyTestnet",
+    "verify:testnet": "ENV_FILE=dev hardhat --config hardhat.config.js run scripts/verify.js --network harmonyTestnet",
+    "simulate": "ENV_FILE=production hardhat --config hardhat.config.js run scripts/simulate.js --network harmony",
+    "simulate:testnet": "ENV_FILE=dev hardhat --config hardhat.config.js run scripts/simulate.js --network harmonyTestnet",
+    "lint": "eslint . --ext .js",
+    "lint:fix": "eslint . --ext .js --fix",
+    "clean": "rimraf cache artifacts || rm -rf cache artifacts",
+    "prettier": "prettier --write \"./**/*.{js,json,md}\"",
+    "prettier:check": "prettier --check \"./**/*.{js,json,md}\""
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.9.3",
+    "dotenv": "^16.6.1",
+    "hardhat": "^2.26.3"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-ethers": "^3.0.8",
+    "solidity-coverage": "^0.8.14",
+    "chai": "^4.5.0",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^10.1.1",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-prettier": "^5.2.6",
+    "mocha": "^10.7.3",
+    "prettier": "^3.3.3",
+    "rimraf": "^6.0.1"
+  },
+  "keywords": [
+    "ethereum",
+    "smart-contracts",
+    "tokens",
+    "swap",
+    "slippage"
+  ],
+  "author": "mzfshark",
+  "license": "MIT"
+}

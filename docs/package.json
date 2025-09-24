@@ -1,0 +1,20 @@
+{
+  "name": "recoveryswap-docs",
+  "version": "1.0.0",
+  "description": "RecoverySwap Documentation Site",
+  "type": "module",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "dev": "vitepress dev",
+    "build": "vitepress build",
+    "preview": "vitepress preview",
+    "deploy": "vercel --prod",
+    "deploy:preview": "vercel",
+    "build:check": "vitepress build && vitepress preview"
+  },
+  "devDependencies": {
+    "vitepress": "1.6.4"
+  }
+}

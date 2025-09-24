@@ -1,0 +1,58 @@
+<!-- public/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script>
+      (function() {
+        // 1) Tenta recuperar preferência explícita do usuário
+        const saved = localStorage.getItem('theme') // 'dark' ou 'light'
+        // 2) Se não houver, usa preferência do sistema
+        const osPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+        const theme = saved || (osPrefersDark ? 'dark' : 'light')
+        document.documentElement.classList.add(theme)
+      })()
+    </script>
+    
+    <meta charset="UTF-8" />
+    <title>Recovery Dex Aggregator</title>
+
+    <!-- Responsividade -->
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Favicon e Manifest (opcional) -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
+    <link rel="manifest" href="/manifest.json" />
+
+    <!-- Google Fonts – Poppins (mesmo usado no Uniswap)  -->
+    <link
+      rel="preconnect"
+      href="https://fonts.googleapis.com"
+    />
+    <link
+      rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Arquivo global gerado por merge-css.js  
+         (no build o Vite reescreve o caminho)           -->
+    <link rel="stylesheet" href="/src/styles/Global.module.css" />
+  </head>
+
+  <!-- 
+    ▸ Para ativar o modo dark basta trocar a classe abaixo
+      <body class="dark">
+      …ou controlar via script/Context API:
+        document.documentElement.classList.toggle('dark', isDark);
+  -->
+  <body>
+    <div id="root"></div>
+
+    <!-- Entrypoint React / Vite -->
+    <script type="module" src="/src/index.jsx"></script>
+  </body>
+</html>

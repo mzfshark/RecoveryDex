@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logo Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .dark {
+            background: #1a1a1a;
+            color: white;
+        }
+        .logo-test {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background: white;
+        }
+        .dark .logo-test {
+            background: #333;
+            border-color: #555;
+        }
+        img {
+            height: 40px;
+            margin: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Logo Test</h1>
+    
+    <button onclick="toggleTheme()">Toggle Theme</button>
+    
+    <div class="logo-test">
+        <h3>Light Theme Logo (logo.png):</h3>
+        <img src="/logo.png" alt="Light Logo" onerror="this.style.border='2px solid red'">
+    </div>
+    
+    <div class="logo-test">
+        <h3>Dark Theme Logo (logo_white.png):</h3>
+        <img src="/logo_white.png" alt="Dark Logo" onerror="this.style.border='2px solid red'">
+    </div>
+    
+    <div class="logo-test">
+        <h3>Current Theme Logo:</h3>
+        <img id="currentLogo" src="/logo.png" alt="Current Logo">
+        <p>Current theme: <span id="currentTheme">light</span></p>
+    </div>
+
+    <script>
+        let isDark = false;
+        
+        function toggleTheme() {
+            isDark = !isDark;
+            document.body.classList.toggle('dark', isDark);
+            
+            const currentLogo = document.getElementById('currentLogo');
+            const currentTheme = document.getElementById('currentTheme');
+            
+            if (isDark) {
+                currentLogo.src = '/logo_white.png';
+                currentTheme.textContent = 'dark';
+            } else {
+                currentLogo.src = '/logo.png';
+                currentTheme.textContent = 'light';
+            }
+            
+            console.log('Theme changed to:', isDark ? 'dark' : 'light');
+            console.log('Logo source:', currentLogo.src);
+        }
+    </script>
+</body>
+</html>

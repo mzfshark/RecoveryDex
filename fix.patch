@@ -1,0 +1,515 @@
+diff --git a/scripts/sync-config.mjs b/scripts/sync-config.mjs
+--- a/scripts/sync-config.mjs
++++ b/scripts/sync-config.mjs
+@@ -58,1 +58,1 @@
+-  } catch {}
++  } catch { /* empty */ }
+diff --git a/CONTRACT_ANALYSIS.md b/CONTRACT_ANALYSIS.md
+--- a/CONTRACT_ANALYSIS.md
++++ b/CONTRACT_ANALYSIS.md
+@@ -6,1 +6,1 @@
+-- Aggregates liquidity across multiple whitelisted Uniswap V2-style routers
++
+- Aggregates liquidity across multiple whitelisted Uniswap V2-style routers
+@@ -14,1 +14,1 @@
+-### Inheritance & Dependencies
++### Inheritance & Dependencies
+
+@@ -18,1 +18,1 @@
+-- **Ownable**: Admin controls for configuration management
++
+- **Ownable**: Admin controls for configuration management
+@@ -24,1 +24,1 @@
+-### Key Constants
++### Key Constants
+
+@@ -32,1 +32,1 @@
+-### State Variables
++### State Variables
+
+@@ -33,1 +33,1 @@
+-- `whitelistedRouters`: EnumerableSet of approved router addresses
++
+- `whitelistedRouters`: EnumerableSet of approved router addresses
+@@ -54,1 +54,1 @@
+-- **Direct**: `tokenIn â tokenOut`
++
+- **Direct**: `tokenIn â tokenOut`
+@@ -62,1 +62,1 @@
+-#### Basic Swap (`swap()`)
++#### Basic Swap (`swap()`)
+
+@@ -63,1 +63,1 @@
+-- Recalculates best route on-chain
++
+- Recalculates best route on-chain
+@@ -68,1 +68,1 @@
+-#### Custom Slippage Swap (`swapWithSlippage()`)
++#### Custom Slippage Swap (`swapWithSlippage()`)
+
+@@ -69,1 +69,1 @@
+-- User-defined slippage tolerance (â¤ 20%)
++
+- User-defined slippage tolerance (â¤ 20%)
+@@ -73,1 +73,1 @@
+-#### Optimized Swap (`swapWithPath()`)
++#### Optimized Swap (`swapWithPath()`)
+
+@@ -74,1 +74,1 @@
+-- Pre-calculated route from off-chain
++
+- Pre-calculated route from off-chain
+@@ -81,1 +81,1 @@
+-#### ETH â Token (`swapETHForTokenWithSlippage()`)
++#### ETH â Token (`swapETHForTokenWithSlippage()`)
+
+@@ -82,1 +82,1 @@
+-- Wraps ETH to WETH automatically
++
+- Wraps ETH to WETH automatically
+@@ -86,1 +86,1 @@
+-#### Token â ETH (`swapTokenForETHWithSlippage()`)
++#### Token â ETH (`swapTokenForETHWithSlippage()`)
+
+@@ -87,1 +87,1 @@
+-- Swaps to WETH then unwraps to ETH
++
+- Swaps to WETH then unwraps to ETH
+@@ -93,1 +93,1 @@
+-#### Router Management
++#### Router Management
+
+@@ -94,1 +94,1 @@
+-- `addRouter(address)`: Add new DEX router to whitelist
++
+- `addRouter(address)`: Add new DEX router to whitelist
+@@ -98,1 +98,1 @@
+-#### Configuration
++#### Configuration
+
+@@ -99,1 +99,1 @@
+-- `setFeeBps(uint16)`: Update protocol fee (â¤ 10%)
++
+- `setFeeBps(uint16)`: Update protocol fee (â¤ 10%)
+@@ -118,1 +118,1 @@
+-### Safe Quote System (`_safeQuote()`)
++### Safe Quote System (`_safeQuote()`)
+
+@@ -119,1 +119,1 @@
+-- Wraps router.getAmountsOut() in try-catch
++
+- Wraps router.getAmountsOut() in try-catch
+@@ -123,1 +123,1 @@
+-### Fee Calculation
++### Fee Calculation
+
+@@ -124,1 +124,1 @@
+-- Fixed percentage of output amount: `fee = (finalOut * feeBps) / 10_000`
++
+- Fixed percentage of output amount: `fee = (finalOut * feeBps) / 10_000`
+@@ -128,1 +128,1 @@
+-### Slippage Protection
++### Slippage Protection
+
+@@ -136,1 +136,1 @@
+-### 1. Access Control
++### 1. Access Control
+
+@@ -137,1 +137,1 @@
+-- **Owner-only**: Router management, fee configuration, WETH setting
++
+- **Owner-only**: Router management, fee configuration, WETH setting
+@@ -140,1 +140,1 @@
+-### 2. Input Validation
++### 2. Input Validation
+
+@@ -141,1 +141,1 @@
+-- Address zero checks for all critical parameters
++
+- Address zero checks for all critical parameters
+@@ -146,1 +146,1 @@
+-### 3. Reentrancy Protection
++### 3. Reentrancy Protection
+
+@@ -147,1 +147,1 @@
+-- All state-changing functions use `nonReentrant` modifier
++
+- All state-changing functions use `nonReentrant` modifier
+@@ -150,1 +150,1 @@
+-### 4. Router Whitelist
++### 4. Router Whitelist
+
+@@ -151,1 +151,1 @@
+-- Only pre-approved routers can be used
++
+- Only pre-approved routers can be used
+@@ -154,1 +154,1 @@
+-### 5. Slippage Limits
++### 5. Slippage Limits
+
+@@ -155,1 +155,1 @@
+-- Hard cap at 20% maximum slippage
++
+- Hard cap at 20% maximum slippage
+@@ -161,1 +161,1 @@
+-### 1. Method Selection
++### 1. Method Selection
+
+@@ -162,1 +162,1 @@
+-- **Highest Gas**: `swap()` - Full on-chain calculation
++
+- **Highest Gas**: `swap()` - Full on-chain calculation
+@@ -166,1 +166,1 @@
+-### 2. EnumerableSet Usage
++### 2. EnumerableSet Usage
+
+@@ -167,1 +167,1 @@
+-- Efficient router iteration
++
+- Efficient router iteration
+@@ -171,1 +171,1 @@
+-### 3. Router Library
++### 3. Router Library
+
+@@ -172,1 +172,1 @@
+-- Pure functions for common operations
++
+- Pure functions for common operations
+@@ -178,1 +178,1 @@
+-### SwapExecuted Event
++### SwapExecuted Event
+
+@@ -192,1 +192,1 @@
+-- Transaction tracking
++
+- Transaction tracking
+@@ -199,1 +199,1 @@
+-### 1. Frontend Integration Flow
++### 1. Frontend Integration Flow
+
+@@ -209,1 +209,1 @@
+-### 2. Recommended Token Lists
++### 2. Recommended Token Lists
+
+@@ -210,1 +210,1 @@
+-- Include high-liquidity tokens as intermediates
++
+- Include high-liquidity tokens as intermediates
+@@ -214,1 +214,1 @@
+-### 3. Error Handling
++### 3. Error Handling
+
+@@ -215,1 +215,1 @@
+-- **No Route Found**: `quotedOut = 0`
++
+- **No Route Found**: `quotedOut = 0`
+@@ -222,1 +222,1 @@
+-### Fee Structure
++### Fee Structure
+
+diff --git a/docs/setup.md b/docs/setup.md
+--- a/docs/setup.md
++++ b/docs/setup.md
+@@ -5,1 +5,1 @@
+-## Requisitos
++## Requisitos
+
+@@ -6,1 +6,1 @@
+-- Node.js 20+
++
+- Node.js 20+
+@@ -11,1 +11,1 @@
+-## VariÃ¡veis de ambiente (.env)
++## VariÃ¡veis de ambiente (.env)
+
+@@ -26,1 +26,1 @@
+-## InstalaÃ§Ã£o
++## InstalaÃ§Ã£o
+
+@@ -31,1 +31,1 @@
+-## Rodar o Frontend (Vite)
++## Rodar o Frontend (Vite)
+
+@@ -35,1 +35,1 @@
+-- Servidor inicia normalmente (porta padrÃ£o do Vite). Caso a porta esteja ocupada, o Vite ajusta automaticamente.
++
+- Servidor inicia normalmente (porta padrÃ£o do Vite). Caso a porta esteja ocupada, o Vite ajusta automaticamente.
+@@ -43,1 +43,1 @@
+-## Hardhat (Contratos)
++## Hardhat (Contratos)
+
+@@ -44,1 +44,1 @@
+-- Compilar: `pnpm compile`
++
+- Compilar: `pnpm compile`
+@@ -50,1 +50,1 @@
+-## Wallet (Reown AppKit)
++## Wallet (Reown AppKit)
+
+@@ -51,1 +51,1 @@
+-- O AppKit Ã© inicializado em `src/web3/appkit.js` com a rede Harmony.
++
+- O AppKit Ã© inicializado em `src/web3/appkit.js` com a rede Harmony.
+@@ -55,1 +55,1 @@
+-## Troubleshooting
++## Troubleshooting
+
+@@ -56,1 +56,1 @@
+-- VariÃ¡veis ausentes: confira `.env`.
++
+- VariÃ¡veis ausentes: confira `.env`.
+diff --git a/README.md b/README.md
+--- a/README.md
++++ b/README.md
+@@ -43,1 +43,1 @@
+-- VITE_RPC_URL_HARMONY=https://api.harmony.one (ou seu RPC)
++- VITE_RPC_URL_HARMONY=<https://api.harmony.one> (ou seu RPC)
+@@ -47,1 +47,1 @@
+-- FEE_BPS=25 (taxa padrÃ£o em bps para o construtor)
++
+- FEE_BPS=25 (taxa padrÃ£o em bps para o construtor)
+@@ -93,1 +93,1 @@
+-	- components/ â UI atÃ´mica (WalletConnect, Swap, etc.)
++ - components/ â UI atÃ´mica (WalletConnect, Swap, etc.)
+@@ -94,1 +94,1 @@
+-	- layouts/ â FormulÃ¡rios/containers (SwapForm, Header, etc.)
++ - layouts/ â FormulÃ¡rios/containers (SwapForm, Header, etc.)
+@@ -95,1 +95,1 @@
+-	- hooks/ â LÃ³gica reutilizÃ¡vel (rotas, slippage, oracle)
++ - hooks/ â LÃ³gica reutilizÃ¡vel (rotas, slippage, oracle)
+@@ -96,1 +96,1 @@
+-	- services/ â Chamadas de contrato, utilitÃ¡rios (aggregatorService, approvals, etc.)
++ - services/ â Chamadas de contrato, utilitÃ¡rios (aggregatorService, approvals, etc.)
+@@ -97,1 +97,1 @@
+-	- context/ â `ContractContext` (provider, signer, contratos)
++ 	- context/ â `ContractContext` (provider, signer, contratos)
+@@ -98,1 +98,1 @@
+-	- web3/ â `appkit.js` (bootstrap Reown AppKit)
++ - web3/ â `appkit.js` (bootstrap Reown AppKit)
+@@ -99,1 +99,1 @@
+-	- abis/ â JSON ABIs
++ - abis/ â JSON ABIs
+@@ -108,1 +108,1 @@
+-	 `#github-pull-request_copilot-coding-agent`
++  `#github-pull-request_copilot-coding-agent`
+diff --git a/docs/README.md b/docs/README.md
+--- a/docs/README.md
++++ b/docs/README.md
+@@ -5,1 +5,1 @@
+-## Taxas
++## Taxas
+
+@@ -6,1 +6,1 @@
+-- `setFeeBps(uint16 newFeeBps)` â taxa fixa em bps (0â1000). PadrÃ£o sugerido: 25 (0,25%).
++
+- `setFeeBps(uint16 newFeeBps)` â taxa fixa em bps (0â1000). PadrÃ£o sugerido: 25 (0,25%).
+@@ -9,1 +9,1 @@
+-## Routers
++## Routers
+
+@@ -10,1 +10,1 @@
+-- `addRouter(address router)` â adiciona um router Uniswap V2.
++
+- `addRouter(address router)` â adiciona um router Uniswap V2.
+@@ -13,1 +13,1 @@
+-## WETH
++## WETH
+
+@@ -14,1 +14,1 @@
+-- `setWETH(address _weth)` â configura o wrapper do token nativo para swaps ETH.
++
+- `setWETH(address _weth)` â configura o wrapper do token nativo para swaps ETH.
+@@ -16,1 +16,1 @@
+-## Ownership
++## Ownership
+
+@@ -17,1 +17,1 @@
+-- `transferOwnership(address newOwner)` â transfere a propriedade.
++
+- `transferOwnership(address newOwner)` â transfere a propriedade.
+diff --git a/docs/arquitetura.md b/docs/arquitetura.md
+--- a/docs/arquitetura.md
++++ b/docs/arquitetura.md
+@@ -5,1 +5,1 @@
+-## VisÃ£o Geral
++## VisÃ£o Geral
+
+@@ -6,1 +6,1 @@
+-- Frontend React (Vite) integrado com Reown AppKit para conexÃ£o de carteiras.
++
+- Frontend React (Vite) integrado com Reown AppKit para conexÃ£o de carteiras.
+@@ -10,1 +10,1 @@
+-## Fluxo de ExecuÃ§Ã£o (Swap)
++## Fluxo de ExecuÃ§Ã£o (Swap)
+
+@@ -11,1 +11,1 @@
+-1. UI coleta input do usuÃ¡rio (tokenIn, tokenOut, amount).
++
+1. UI coleta input do usuÃ¡rio (tokenIn, tokenOut, amount).
+@@ -19,1 +19,1 @@
+-## MÃ³dulos
++## MÃ³dulos
+
+@@ -20,1 +20,1 @@
+-- `src/context/ContractContext.jsx`: inicializa provider/signers e contratos (read/write).
++
+- `src/context/ContractContext.jsx`: inicializa provider/signers e contratos (read/write).
+@@ -26,1 +26,1 @@
+-## Reown AppKit
++## Reown AppKit
+
+@@ -27,1 +27,1 @@
+-- `src/web3/appkit.js`: configura `createAppKit` + `WagmiAdapter` com rede Harmony.
++
+- `src/web3/appkit.js`: configura `createAppKit` + `WagmiAdapter` com rede Harmony.
+@@ -30,1 +30,1 @@
+-## Limites e SeguranÃ§a
++## Limites e SeguranÃ§a
+
+@@ -31,1 +31,1 @@
+-- MAX_HOPS = 3; MAX_INTERMEDIATE = 2; MAX_SLIPPAGE_BPS = 2000.
++
+- MAX_HOPS = 3; MAX_INTERMEDIATE = 2; MAX_SLIPPAGE_BPS = 2000.
+diff --git a/src/components/Swap.jsx b/src/components/Swap.jsx
+--- a/src/components/Swap.jsx
++++ b/src/components/Swap.jsx
+@@ -64,1 +64,1 @@
+-  }, [inputToken, outputToken, amount]);
++  }, [inputToken, outputToken, amount, fetchQuote]);
+diff --git a/docs/contratos.md b/docs/contratos.md
+--- a/docs/contratos.md
++++ b/docs/contratos.md
+@@ -5,1 +5,1 @@
+-## Principais constantes
++## Principais constantes
+
+@@ -6,1 +6,1 @@
+-- MAX_HOPS = 3
++
+- MAX_HOPS = 3
+@@ -11,1 +11,1 @@
+-## ConfiguraÃ§Ãµes e Admin
++## ConfiguraÃ§Ãµes e Admin
+
+@@ -12,1 +12,1 @@
+-- `constructor(owner, routers[], feeBps)` â inicializa owner, adiciona routers e define taxa fixa.
++
+- `constructor(owner, routers[], feeBps)` â inicializa owner, adiciona routers e define taxa fixa.
+@@ -18,1 +18,1 @@
+-## Leitura
++## Leitura
+
+@@ -19,1 +19,1 @@
+-- `getRouters()` / `getRouterAt(index)` / `getRouterCount()`
++
+- `getRouters()` / `getRouterAt(index)` / `getRouterCount()`
+@@ -23,1 +23,1 @@
+-## ExecuÃ§Ã£o de Swaps
++## ExecuÃ§Ã£o de Swaps
+
+@@ -24,1 +24,1 @@
+-- `swap(amountIn, tokenIn, tokenOut, intermediates, deadline)`
++
+- `swap(amountIn, tokenIn, tokenOut, intermediates, deadline)`
+@@ -35,1 +35,1 @@
+-## Eventos
++## Eventos
+
+@@ -36,1 +36,1 @@
+-- `RouterAdded`, `RouterRemoved`, `FeeReceiverUpdated`, `WETHUpdated`, `FeeBpsUpdated`, `SwapExecuted`
++
+- `RouterAdded`, `RouterRemoved`, `FeeReceiverUpdated`, `WETHUpdated`, `FeeBpsUpdated`, `SwapExecuted`
+@@ -38,1 +38,1 @@
+-## Notas
++## Notas
+
+@@ -39,1 +39,1 @@
+-- Usa OZ: Ownable, ReentrancyGuard, SafeERC20.
++
+- Usa OZ: Ownable, ReentrancyGuard, SafeERC20.
+diff --git a/src/hooks/useTheme.js b/src/hooks/useTheme.js
+--- a/src/hooks/useTheme.js
++++ b/src/hooks/useTheme.js
+@@ -19,1 +19,1 @@
+-  }, [theme]);
++  }, [apply, theme]);
+@@ -24,1 +24,1 @@
+-  }, []);
++  }, [theme]);
+diff --git a/docs/hooks.md b/docs/hooks.md
+--- a/docs/hooks.md
++++ b/docs/hooks.md
+@@ -14,1 +14,1 @@
+-- Manter hooks puros e com dependÃªncias corretas para evitar loops.
++
+- Manter hooks puros e com dependÃªncias corretas para evitar loops.
+diff --git a/docs/servicos.md b/docs/servicos.md
+--- a/docs/servicos.md
++++ b/docs/servicos.md
+@@ -5,1 +5,1 @@
+-## aggregatorService.js
++## aggregatorService.js
+
+@@ -6,1 +6,1 @@
+-- getAggregatorAddress()
++
+- getAggregatorAddress()
+@@ -17,1 +17,1 @@
+-## approvalServices.js
++## approvalServices.js
+
+@@ -18,1 +18,1 @@
+-- `approveIfNeeded(token, spender, signer, amount)` â aprovaÃ§Ãµes condicionais para evitar erros de allowance insuficiente.
++
+- `approveIfNeeded(token, spender, signer, amount)` â aprovaÃ§Ãµes condicionais para evitar erros de allowance insuficiente.
+@@ -20,1 +20,1 @@
+-## priceImpactService.js / minOutputService.js
++## priceImpactService.js / minOutputService.js
+
+@@ -21,1 +21,1 @@
+-- CÃ¡lculos auxiliares para estimar impacto de preÃ§o e minOut exibido na UI.
++
+- CÃ¡lculos auxiliares para estimar impacto de preÃ§o e minOut exibido na UI.
+@@ -23,1 +23,1 @@
+-## provider.js
++## provider.js
+
+@@ -24,1 +24,1 @@
+-- Define provider prioritizando a carteira (window.ethereum / AppKit) com fallback para RPC pÃºblico.
++
+- Define provider prioritizando a carteira (window.ethereum / AppKit) com fallback para RPC pÃºblico.
+@@ -26,1 +26,1 @@
+-## routerService.js / routeServices.js / tokenService.js
++## routerService.js / routeServices.js / tokenService.js
+
+@@ -27,1 +27,1 @@
+-- UtilitÃ¡rios para nomes de routers, tokens da rota e manipulaÃ§Ã£o de listas.
++
+- UtilitÃ¡rios para nomes de routers, tokens da rota e manipulaÃ§Ã£o de listas.
+diff --git a/docs/componentes.md b/docs/componentes.md
+--- a/docs/componentes.md
++++ b/docs/componentes.md
+@@ -5,1 +5,1 @@
+-## Componentes
++## Componentes
+
+@@ -6,1 +6,1 @@
+-- `App.jsx`: Shell da aplicaÃ§Ã£o; carrega layout e pÃ¡ginas.
++
+- `App.jsx`: Shell da aplicaÃ§Ã£o; carrega layout e pÃ¡ginas.
+@@ -14,1 +14,1 @@
+-## Layouts
++## Layouts
+
+@@ -15,1 +15,1 @@
+-- `SwapForm.jsx`: Form principal do swap; faz approve condicional e executa swap via serviÃ§os; calcula minOut e impactos.
++
+- `SwapForm.jsx`: Form principal do swap; faz approve condicional e executa swap via serviÃ§os; calcula minOut e impactos.
+@@ -20,1 +20,1 @@
+-## Boas prÃ¡ticas adotadas
++## Boas prÃ¡ticas adotadas
+
+@@ -21,1 +21,1 @@
+-- ConversÃ£o de quantias: `parseUnits` para enviar ao contrato e `formatUnits` para exibir ao usuÃ¡rio.
++
+- ConversÃ£o de quantias: `parseUnits` para enviar ao contrato e `formatUnits` para exibir ao usuÃ¡rio.
