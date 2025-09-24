@@ -1,170 +1,57 @@
-# RecoverySwap — DEX Aggregator (Uniswap V2 forks)
+# Aggregator MultiSplit
 
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/a2cdd664b12c49879432435467dbcd89)](https://app.codacy.com/gh/ThinkinCoin/RecoverySwap/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+Este projeto implementa um contrato inteligente para realizar swaps de tokens na rede Ethereum, permitindo a divisão de uma quantidade de entrada (`amountIn`) em múltiplas operações menores. Isso é feito utilizando rotas com tokens intermediários como Jewel, SONIC ou VIPER, com o objetivo de reduzir o slippage em grandes transações.
 
-RecoverySwap é um agregador de DEXs que encontra a melhor rota de swap entre pares ERC-20, com suporte a múltiplos routers Uniswap V2, controle de slippage, taxa fixa (feeBps) e integração de carteira via Reown AppKit.
+## Estrutura do Projeto
 
-• Contratos: `contracts/AggregatorV2.sol`
-• Frontend: React + Vite + ethers v6 + wagmi + Reown AppKit
-• Deploy/Testes: Hardhat (scripts em `scripts/` e testes em `test/`)
+- **contracts/**: Contém os contratos inteligentes.
+  - **AggregatorMultiSplit.sol**: Implementa a funcionalidade de dividir a `amountIn` em múltiplas operações menores, com whitelist de routers e tokens intermediários.
+  - **interfaces/**: Define as interfaces para interações com contratos externos.
+    - **IUniswapV2Router02.sol**: Interface para o router Uniswap V2.
+    - **IWETH.sol**: Interface para o contrato WETH.
+  - **lib/**: Contém funções utilitárias para manipulação de rotas e cálculos relacionados a swaps.
+    - **RouterLib.sol**: Funções para encontrar a melhor rota e calcular slippage.
 
-Saiba mais nos docs em `./docs/`:
+- **scripts/**: Scripts para implantar e simular o comportamento dos contratos.
+  - **deploy.js**: Script para implantar o AggregatorMultiSplit na rede.
 
-- Visão geral e arquitetura: docs/arquitetura.md
-- Componentes (UI): docs/componentes.md
-- Hooks: docs/hooks.md
-- Serviços (web3 e utilitários): docs/servicos.md
-- Contrato AggregatorV2: docs/contratos.md
-- Guia de setup/execução: docs/setup.md
-- Guia de administração (fees/routers/WETH): docs/admin.md
-- Automação com Copilot (Coding Agent): docs/copilot-agent.md
+- **test/**: Contém os testes unitários para os contratos.
+  - **AggregatorV2.spec.ts**: Testes para o contrato AggregatorV2.
+  - **AggregatorV2MultiSplit.spec.ts**: Testes para as novas funcionalidades do contrato AggregatorV2MultiSplit.
 
-## Sumário rápido
+- **hardhat.config.js**: Configuração do Hardhat, especificando redes, compiladores e plugins utilizados.
 
-- Melhor rota on-chain e off-chain (quote + swap)
-- Suporte a caminhos com intermediários (até 3 hops)
-- Slippage controlado e variantes com path/minOut
-- Taxa fixa configurável (feeBps) com teto MAX_FEE_BPS
-- Suporte a WETH/ETH em swaps nativos
-- UI resiliente com ErrorBoundary, WalletConnect via Reown AppKit
+- **package.json**: Configuração do npm, listando as dependências e scripts do projeto.
 
-## Requisitos
+- **tsconfig.json**: Configuração do TypeScript, especificando opções do compilador e arquivos a serem incluídos na compilação.
 
-- Node.js 20+
-- pnpm 10+ (recomendado) ou npm/yarn
-- Carteira EVM (MetaMask ou compatíveis via Reown AppKit)
-- RPC Harmony para leitura/escrita (ou outra rede compatível se adaptar)
+## Instalação
 
-## Variáveis de ambiente
+Para instalar as dependências do projeto, execute:
 
-Crie um arquivo `.env` na raiz com:
-
-- VITE_REOWN_PROJECT_ID=seu_project_id_reown
-- VITE_RPC_URL_HARMONY=<https://api.harmony.one> (ou seu RPC)
-- VITE_AGGREGATOR_ADDRESS=0x...
-
-Opcional (deploy Hardhat):
-- FEE_BPS=25 (taxa padrão em bps para o construtor)
-- WETH_ADDRESS=0x... (para setWETH pós-deploy)
-
-## Como rodar (frontend)
-
-Instale dependências e rode o dev server:
-
-```sh
-pnpm install
-pnpm dev
+```
+npm install
 ```
 
-Build de produção e preview local:
+## Uso
 
-```sh
-pnpm build
-pnpm preview
+Para implantar os contratos na rede, utilize o script de implantação:
+
+```
+npx hardhat deploy:multisplit --network <network_name>
 ```
 
-## Hardhat (compilar, testar, deploy)
+Para simular a execução de swaps com a nova funcionalidade de divisão de operações, execute:
 
-Compilar contratos:
-
-```sh
-pnpm compile
+```
+# exemplo (se houver script de simulação)
+# npx hardhat run scripts/simulate-split.ts --network <network_name>
 ```
 
-Executar testes:
+## Contribuição
 
-```sh
-pnpm hardhat-test
-```
-
-Deploy (exemplo Harmony configurado no hardhat.config):
-
-```sh
-pnpm deploy:harmony
-```
-
-Mais detalhes em `docs/setup.md` e `scripts/deploy.js`.
-
-## Estrutura do projeto (alto nível)
-
-- contracts/ — Solidity (AggregatorV2, libs, mocks)
-- scripts/ — Deploy/auxiliares Hardhat
-- src/
-	- components/ — UI atômica (WalletConnect, Swap, etc.)
-	- layouts/ — Formulários/containers (SwapForm, Header, etc.)
-	- hooks/ — Lógica reutilizável (rotas, slippage, oracle)
-	- services/ — Chamadas de contrato, utilitários (aggregatorService, approvals, etc.)
-	- context/ — `ContractContext` (provider, signer, contratos)
-	- web3/ — `appkit.js` (bootstrap Reown AppKit)
-	- abis/ — JSON ABIs
-
-## Automação com Copilot (Coding Agent)
-
-Para executar tarefas maiores automaticamente (criar branch, aplicar mudanças e abrir PR), use o “Copilot Coding Agent”. O guia completo está em `docs/copilot-agent.md`. Resumo:
-
-1) Ative o GitHub Copilot Chat no VS Code e autentique-se.
-2) Abra este repositório no VS Code.
-3) No chat do Copilot, descreva a tarefa e inclua a tag:
-	 `#github-pull-request_copilot-coding-agent`
-4) O agente criará uma branch, implementará a tarefa e abrirá um PR.
+Contribuições são bem-vindas! Sinta-se à vontade para abrir issues ou pull requests para melhorias e correções.
 
 ## Licença
 
-MIT — veja `LICENSE.md`.
-
-## Suporte
-
-Abra issues ou PRs. Consulte os documentos em `docs/` para detalhes de arquitetura, APIs e troubleshooting.
-
-## Deploy (produção)
-
-### Produção: Frontend na Vercel + Google API Gateway (recomendado)
-
-O frontend deve apontar para o Google API Gateway que expõe a API externa (por exemplo, `https://dex-monitor-839js5ts.uc.gateway.dev`).
-No ambiente de produção, usamos o Gateway para rotear requisições para `https://whostler.com/api/`.
-
-Variáveis de ambiente úteis (exemplo .env):
-
-```env
-# Google GCP API Gateway
-VITE_API_GATEWAY_URL=https://dex-monitor-839js5ts.uc.gateway.dev
-VITE_API_KEY=AIzaSyCxJ7ZpVbZXGpOk6dMjerLq9jzihWOKAws
-VITE_API_TIMEOUT=10000
-VITE_API_RETRY_COUNT=3
-```
-
-- Configure na Vercel um rewrite para que chamadas internas ao frontend para `/api/*` sejam encaminhadas ao Gateway (opcional — o frontend já usa o `VITE_API_GATEWAY_URL`):
-
-```json
-{
-	"rewrites": [
-		{ "source": "/api/(.*)", "destination": "https://dex-monitor-839js5ts.uc.gateway.dev/api/$1" }
-	]
-}
-```
-
-Uso em frontend
-- O app continua chamando `fetch('/api/liquidity')` e `fetch('/api/health')` durante o desenvolvimento. Em produção, o `VITE_API_GATEWAY_URL` deve apontar para o Gateway. Se você preferir apontar diretamente para o backend, defina `VITE_API_GATEWAY_URL=https://whostler.com`.
-
-Segurança
-- Se o Gateway exigir chave de API, envie o header `x-api-key: <VITE_API_KEY>` nas requisições.
-
-Observação: A pasta `server/` e o servidor Express foram removidos do fluxo de desenvolvimento — a API agora é uma dependência externa gerenciada fora deste código. Se o diretório `server/` ainda existir localmente no repositório, remova-o com os comandos abaixo (execute na raiz do repositório):
-
-Linux / macOS / WSL:
-
-```sh
-git rm -r server/
-git commit -m "chore: remove internal server"
-git push
-```
-
-Windows (PowerShell):
-
-```powershell
-git rm -r server/
-git commit -m "chore: remove internal server"
-git push
-```
-
-ou execute os scripts preparados em `scripts/remove-server.sh` ou `scripts/remove-server.ps1`.
+Este projeto está licenciado sob a MIT License. Veja o arquivo LICENSE para mais detalhes.
