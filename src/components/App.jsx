@@ -21,6 +21,9 @@ import { initAppKit } from '../web3/appkit';
 import NotificationSystem, { notificationManager } from './NotificationSystem';
 import { setNotificationManager } from '../services/notificationService';
 
+// Debug utilities
+import '../debug/env-check.js';
+
 // Pages
 import Home from '../pages/home';
 import LiquidityPage from '../pages/LiquidityPage';
@@ -41,9 +44,20 @@ const Layout = () => (
 const App = () => {
   // Initialize AppKit on app startup
   useEffect(() => {
-    initAppKit();
+    console.log('[App] Starting initialization...');
+    
+    // Initialize AppKit with error handling
+    try {
+      const result = initAppKit();
+      console.log('[App] AppKit initialization result:', result ? 'Success' : 'Failed/Skipped');
+    } catch (error) {
+      console.error('[App] AppKit initialization error:', error);
+    }
+    
     // Connect notification manager to services
     setNotificationManager(notificationManager);
+    
+    console.log('[App] App initialization completed');
   }, []);
 
   return (
