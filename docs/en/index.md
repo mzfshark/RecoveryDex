@@ -3,12 +3,12 @@
 layout: home
 
 hero:
-  name: "RecoverySwap"
+  name: "RecoveryDex"
   text: "DeFi Aggregator Documentation"
   tagline: "Comprehensive guide for depegged token recovery and DEX aggregation"
   image:
     src: ./logo.png
-    alt: RecoverySwap Logo
+    alt: RecoveryDex Logo
   actions:
     - theme: brand
       text: Get Started
@@ -40,7 +40,7 @@ features:
 ## Quick Links
 
 ::: tip Getting Started
-New to RecoverySwap? Start with our [Setup Guide](./setup) to get up and running in minutes.
+New to RecoveryDex? Start with our [Setup Guide](./setup) to get up and running in minutes.
 :::
 
 ::: info Architecture
@@ -51,9 +51,9 @@ Learn about the system design and core concepts in our [Architecture Overview](.
 Explore our advanced features like [Allowance Caching](./allowance-cache) and [External API Integration](./transactions-api).
 :::
 
-## What's RecoverySwap?
+## What's RecoveryDex?
 
-RecoverySwap is a sophisticated DeFi aggregator designed specifically for **depegged token recovery**. It combines intelligent routing across multiple DEX protocols with advanced performance optimizations to help users recover maximum value from their depegged tokens.
+RecoveryDex is a sophisticated DeFi aggregator designed specifically for **depegged token recovery**. It combines intelligent routing across multiple DEX protocols with advanced performance optimizations to help users recover maximum value from their depegged tokens.
 
 ### Key Capabilities
 
@@ -65,7 +65,7 @@ RecoverySwap is a sophisticated DeFi aggregator designed specifically for **depe
 ### Perfect For
 
 - **DeFi Users**: Recovering value from depegged stablecoins and tokens
-- **Developers**: Building on top of RecoverySwap's modular architecture
+- **Developers**: Building on top of RecoveryDex's modular architecture
 - **Integrators**: Adding recovery functionality to existing DeFi applications
 
 ---

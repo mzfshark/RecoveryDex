@@ -1,4 +1,4 @@
-# RecoverySwap Documentation Deployment
+# RecoveryDex Documentation Deployment
 
 This documentation is built with [VitePress](https://vitepress.dev/) and deployed on Vercel.
 
@@ -42,7 +42,7 @@ vercel --prod
 1. **Connect Repository**:
    - Access [Vercel Dashboard](https://vercel.com/dashboard)
    - Click "Add New..." → "Project" 
-   - Import the RecoverySwap repository
+   - Import the RecoveryDex repository
 
 2. **Configure Build Settings**:
    ```bash
@@ -189,9 +189,9 @@ npm run docs:preview
 
 ### Domains & Redirects
 Possible domain configurations:
-- `docs.recoveryswap.com` (primary)
-- `docs-dev.recoveryswap.com` (staging)
-- `recoveryswap-docs.vercel.app` (default)
+- `docs.RecoveryDex.com` (primary)
+- `docs-dev.RecoveryDex.com` (staging)
+- `RecoveryDex-docs.vercel.app` (default)
 
 ## 📊 Performance
 
@@ -264,4 +264,4 @@ DEBUG=vitepress:* npm run docs:build
 ## 📞 Support
 
 
-- **GitHub Issues**: [Report project-specific issues](https://github.com/ThinkinCoin/RecoverySwap/issues/new)
+- **GitHub Issues**: [Report project-specific issues](https://github.com/ThinkinCoin/RecoveryDex/issues/new)

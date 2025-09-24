@@ -1,6 +1,6 @@
 # Setup e Execução
 
-Este guia cobre do zero ao funcionamento do RecoverySwap.
+Este guia cobre do zero ao funcionamento do RecoveryDex.
 
 ## Requisitos
 - Node.js 20+
