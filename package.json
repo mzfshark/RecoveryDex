@@ -28,7 +28,9 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.8.0",
-    "@reown/appkit": "^1.0.0",
+    "@reown/appkit": "^1.1.1",
+    "@reown/appkit-adapter-ethers": "^1.1.1",
+    "@walletconnect/ethereum-provider": "^2.13.0",
     "ethers": "^6.7.0",
     "web-vitals": "^3.3.0"
   },
