@@ -6,7 +6,6 @@ import { NavLink } from "react-router-dom";
 import styles from  "../styles/Global.module.css"; // ensure global CSS is loaded
 import { RiTokenSwapLine } from "react-icons/ri";
 import { TbTransactionBitcoin } from "react-icons/tb";
-import { FiSettings } from "react-icons/fi";
 import { SiGoogledocs } from "react-icons/si";
 import { MdDashboard } from "react-icons/md";
 
@@ -15,7 +14,6 @@ const navItems = [
   { path: "/swap", icon: RiTokenSwapLine,  label: "Swap" },
   { path: "/transactions", icon: TbTransactionBitcoin, label: "Transactions"},
   { path: "/liquidity", icon: MdDashboard, label: "Liquidity" },
-  { path: "/settings", icon: FiSettings, label: "Settings" },
 ];
 
 // External link for docs
