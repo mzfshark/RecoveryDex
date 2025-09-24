@@ -1,6 +1,6 @@
 # Setup and Run
 
-This guide covers everything you need to get RecoverySwap running.
+This guide covers everything you need to get RecoveryDex running.
 
 ## Requirements
 - Node.js 20+
