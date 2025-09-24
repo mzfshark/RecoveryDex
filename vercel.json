@@ -83,5 +83,5 @@
   "buildCommand": "npm run build",
   "framework": "vite",
   "outputDirectory": "dist",
-  "nodeVersion": "18.x"
+  "nodeVersion": "20.x"
 }
