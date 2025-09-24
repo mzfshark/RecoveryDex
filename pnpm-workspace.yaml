@@ -1,5 +1,10 @@
+packages:
+  - '.'
+  - 'docs'
+
 onlyBuiltDependencies:
   - '@reown/appkit'
+  - '@reown/appkit-adapter-ethers'
   - bufferutil
   - esbuild
   - keccak

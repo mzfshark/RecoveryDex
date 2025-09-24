@@ -79,10 +79,7 @@
       "destination": "https://whostler.com/api/$1" 
     }
   ],
-  "installCommand": "npm install --legacy-peer-deps",
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist",
-  "env": {
-    "NPM_CONFIG_PACKAGE_LOCK": "false"
-  }
+  "installCommand": "pnpm install --no-frozen-lockfile",
+  "buildCommand": "pnpm run build",
+  "outputDirectory": "dist"
 }
