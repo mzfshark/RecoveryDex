@@ -295,4 +295,4 @@ this.cleanupInterval = 30 * 1000; // 30 segundos
 
 ## Conclusão
 
-O sistema de cache de allowance proporciona melhoria significativa na performance e UX do RecoverySwap, reduzindo drasticamente consultas desnecessárias à blockchain e tornando as operações mais fluidas para os usuários.
+O sistema de cache de allowance proporciona melhoria significativa na performance e UX do RecoveryDex, reduzindo drasticamente consultas desnecessárias à blockchain e tornando as operações mais fluidas para os usuários.

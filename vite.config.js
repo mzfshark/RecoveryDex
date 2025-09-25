@@ -37,6 +37,12 @@ export default defineConfig(({ mode }) => {
     },
     optimizeDeps: {
       include: [
+        '@reown/appkit',
+        '@reown/appkit-adapter-ethers',
+        'ethers',
+        'react',
+        'react-dom',
+        'react-router-dom'
       ]
     },
     build: {
@@ -44,8 +50,13 @@ export default defineConfig(({ mode }) => {
       outDir: 'dist',
       emptyOutDir: true,
       rollupOptions: {
-        external: [
-        ]
+        external: [],
+        output: {
+          manualChunks: {
+            'react-vendor': ['react', 'react-dom'],
+            'web3-vendor': ['ethers', '@reown/appkit', '@reown/appkit-adapter-ethers']
+          }
+        }
       }
     },
     css: {

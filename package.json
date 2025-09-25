@@ -1,48 +1,31 @@
 {
-  "name": "dex_aggregator",
-  "version": "2.0.0",
-  "description": "",
-  "author": "mzfshark",
-  "license": "MIT",
+  "name": "aggregator-multisplit",
+  "version": "1.0.0",
+  "description": "A project for multi-split token swaps using intermediate tokens to reduce slippage.",
+  "main": "scripts/deploy.js",
   "scripts": {
-    "dev": "ENV_FILE=dev vite --mode dev",
+    "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "eject": "react-scripts eject",
-    "compile": "npx hardhat compile",
-    "deploy:harmony": "npx hardhat run scripts/deploy.js --network harmony",
-    "hardhat-test": "npx hardhat test",
-    "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
-    "lint:fix": "eslint ./src --ext .js,.jsx,.ts,.tsx --fix",
-    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
-    "link:tokenlist": "npm link  ./src/lists",
-    "merge-css": "node merge-css.js",
-    "sync-config": "node scripts/sync-config.mjs",
-    "typecheck": "tsc -p tsconfig.json --noEmit",
-    "typecheck:hardhat": "tsc -p tsconfig.hardhat.json --noEmit",
-    "docs:dev": "vitepress dev docs",
-    "docs:build": "vitepress build docs",
-    "docs:preview": "vitepress preview docs",
-    "build:all": "npm run build && npm run docs:build",
-    "vercel-build": "npm run build"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+    "compile": "hardhat --config hardhat.config.js compile",
+    "test": "hardhat --config hardhat.config.js test",
+    "coverage": "COVERAGE=true hardhat --config hardhat.config.js coverage",
+    "deploy": "ENV_FILE=production hardhat --config hardhat.config.js run scripts/deploy.js --network harmony",
+    "deploy:testnet": "ENV_FILE=dev hardhat --config hardhat.config.js run scripts/deploy.js --network harmonyTestnet",
+    "verify:testnet": "ENV_FILE=dev hardhat --config hardhat.config.js run scripts/verify.js --network harmonyTestnet",
+    "simulate": "ENV_FILE=production hardhat --config hardhat.config.js run scripts/simulate.js --network harmony",
+    "simulate:testnet": "ENV_FILE=dev hardhat --config hardhat.config.js run scripts/simulate.js --network harmonyTestnet",
+    "lint": "eslint . --ext .js",
+    "lint:fix": "eslint . --ext .js --fix",
+    "clean": "rimraf cache artifacts || rm -rf cache artifacts",
+    "prettier": "prettier --write \"./**/*.{js,json,md}\"",
+    "prettier:check": "prettier --check \"./**/*.{js,json,md}\""
   },
   "dependencies": {
     "@openzeppelin/contracts": "^4.9.3",
     "@reduxjs/toolkit": "^1.8.4",
-    "@reown/appkit": "^1.8.4",
-    "@reown/appkit-adapter-ethers": "^1.8.4",
+  "@reown/appkit": "^1.8.7",
+    "@reown/appkit-adapter-ethers": "^1.8.7",
     "@tailwindcss/forms": "^0.5.6",
     "@tanstack/react-query": "^5.74.4",
     "@testing-library/jest-dom": "^5.16.5",
@@ -94,7 +77,7 @@
     "@vitejs/plugin-react": "^4.4.1",
     "chai": "^4.5.0",
     "concurrently": "^9.1.0",
-    "eslint": "^8.57.1",
+    "eslint": "^9.36.0",
     "eslint-config-prettier": "^10.1.1",
     "eslint-plugin-prettier": "^5.2.6",
     "eslint-plugin-react": "^7.37.5",
@@ -109,5 +92,14 @@
     "vite": "^6.3.3",
     "vitepress": "2.0.0-alpha.12"
   },
-  "packageManager": "pnpm@10.17.0"
+  "keywords": [
+    "ethereum",
+    "smart-contracts",
+    "tokens",
+    "swap",
+    "slippage"
+  ],
+  "author": "mzfshark",
+  "license": "MIT",
+  "packageManager": "pnpm@10.17.0+sha512.fce8a3dd29a4ed2ec566fb53efbb04d8c44a0f05bc6f24a73046910fb9c3ce7afa35a0980500668fa3573345bd644644fa98338fa168235c80f4aa17aa17fbef"
 }

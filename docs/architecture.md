@@ -1,6 +1,6 @@
 # Architecture
 
-High-level view of RecoverySwap's main modules and flows.
+High-level view of RecoveryDex's main modules and flows.
 
 ## Overview
 - React frontend (Vite) integrated with Reown AppKit for wallet connections.

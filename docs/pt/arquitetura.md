@@ -1,6 +1,6 @@
 # Arquitetura
 
-Visão de alto nível dos módulos e fluxos principais do RecoverySwap.
+Visão de alto nível dos módulos e fluxos principais do RecoveryDex.
 
 ## Visão Geral
 - Frontend React (Vite) integrado com Reown AppKit para conexão de carteiras.

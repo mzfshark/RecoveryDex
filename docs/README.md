@@ -1,10 +1,10 @@
-# RecoverySwap Documentation
+# RecoveryDex Documentation
 
-Welcome to the comprehensive documentation for **RecoverySwap**, a sophisticated DeFi aggregator designed specifically for depegged token recovery and optimal swap routing.
+Welcome to the comprehensive documentation for **RecoveryDex**, a sophisticated DeFi aggregator designed specifically for depegged token recovery and optimal swap routing.
 
-## What is RecoverySwap?
+## What is RecoveryDex?
 
-RecoverySwap is a decentralized exchange (DEX) aggregator that helps users recover value from depegged tokens by finding the most efficient swap routes across multiple liquidity sources. The platform combines advanced routing algorithms with performance optimization to provide the best possible rates for token swaps.
+RecoveryDex is a decentralized exchange (DEX) aggregator that helps users recover value from depegged tokens by finding the most efficient swap routes across multiple liquidity sources. The platform combines advanced routing algorithms with performance optimization to provide the best possible rates for token swaps.
 
 ## Key Features
 
@@ -30,7 +30,7 @@ RecoverySwap is a decentralized exchange (DEX) aggregator that helps users recov
 
 ## Quick Start
 
-Get up and running with RecoverySwap in minutes:
+Get up and running with RecoveryDex in minutes:
 
 1. **[Setup Guide](./setup.md)** - Installation and configuration
 2. **[Architecture Overview](./architecture.md)** - Understanding the system design
@@ -72,14 +72,14 @@ Comprehensive transaction management system that provides persistent data storag
 
 ## Getting Help
 
-- **GitHub Issues**: [Report bugs or request features](https://github.com/mzfshark/RecoverySwap/issues)
+- **GitHub Issues**: [Report bugs or request features](https://github.com/mzfshark/RecoveryDex/issues)
 - **Documentation**: Browse the comprehensive guides in this documentation
 - **Community**: Join our developer community for support and discussions
 
 ## Contributing
 
-RecoverySwap is an open-source project welcoming contributions from developers worldwide. Whether you're fixing bugs, adding features, or improving documentation, your contributions make the platform better for everyone.
+RecoveryDex is an open-source project welcoming contributions from developers worldwide. Whether you're fixing bugs, adding features, or improving documentation, your contributions make the platform better for everyone.
 
 ---
 
-Ready to dive in? Start with our **[Setup Guide](./setup.md)** to get RecoverySwap running locally, or explore the **[Architecture Overview](./architecture.md)** to understand how everything works together.
+Ready to dive in? Start with our **[Setup Guide](./setup.md)** to get RecoveryDex running locally, or explore the **[Architecture Overview](./architecture.md)** to understand how everything works together.

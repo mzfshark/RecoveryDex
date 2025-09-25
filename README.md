@@ -1,170 +1,157 @@
-# RecoverySwap — DEX Aggregator (Uniswap V2 forks)
+# RecoveryDex - Multi-Split Token Swap Aggregator
 
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/a2cdd664b12c49879432435467dbcd89)](https://app.codacy.com/gh/ThinkinCoin/RecoverySwap/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+RecoveryDex is a comprehensive DeFi platform that combines smart contract aggregation with an intuitive React frontend. The project implements intelligent token swapping on the Harmony network, allowing users to split large transactions (`amountIn`) into multiple smaller operations using intermediate tokens like JEWEL, SONIC, or VIPER to minimize slippage.
 
-RecoverySwap é um agregador de DEXs que encontra a melhor rota de swap entre pares ERC-20, com suporte a múltiplos routers Uniswap V2, controle de slippage, taxa fixa (feeBps) e integração de carteira via Reown AppKit.
+## 🌟 Features
 
-• Contratos: `contracts/AggregatorV2.sol`
-• Frontend: React + Vite + ethers v6 + wagmi + Reown AppKit
-• Deploy/Testes: Hardhat (scripts em `scripts/` e testes em `test/`)
+- **Multi-Split Aggregation**: Automatically splits large trades into smaller chunks to reduce slippage
+- **Router Optimization**: Finds the best routes across multiple DEX routers
+- **Intermediate Token Support**: Uses whitelisted intermediate tokens for optimal routing
+- **React Frontend**: Modern, responsive web interface with wallet integration
+- **Documentation Site**: Comprehensive VitePress-powered documentation
+- **Harmony Network**: Optimized for Harmony blockchain with WONE support
 
-Saiba mais nos docs em `./docs/`:
+## 📁 Project Structure
 
-- Visão geral e arquitetura: docs/arquitetura.md
-- Componentes (UI): docs/componentes.md
-- Hooks: docs/hooks.md
-- Serviços (web3 e utilitários): docs/servicos.md
-- Contrato AggregatorV2: docs/contratos.md
-- Guia de setup/execução: docs/setup.md
-- Guia de administração (fees/routers/WETH): docs/admin.md
-- Automação com Copilot (Coding Agent): docs/copilot-agent.md
+### Smart Contracts (`contracts/`)
+- **AggregatorMultiSplit.sol**: Core contract implementing multi-split functionality with router and intermediate token whitelisting
+- **BandOracle/**: Price oracle integration using Band Protocol
+- **interfaces/**: Contract interfaces for external integrations
+  - **IUniswapV2Router02.sol**: Uniswap V2 router interface
+  - **IWETH.sol**: Wrapped ETH interface
+- **lib/**: Utility libraries for routing and swap calculations
+  - **RouterLib.sol**: Route optimization and slippage calculation functions
+- **Mocks/**: Test contracts for development and testing
 
-## Sumário rápido
+### Frontend Application (`src/`)
+- **components/**: React components including swap interface, admin panels, and notifications
+- **pages/**: Application pages (Home, Liquidity, Transactions, Settings, Admin)
+- **hooks/**: Custom React hooks for blockchain interactions
+- **services/**: API services and blockchain integration
+- **web3/**: Web3 configuration and wallet connection (AppKit)
+- **context/**: React context providers for state management
 
-- Melhor rota on-chain e off-chain (quote + swap)
-- Suporte a caminhos com intermediários (até 3 hops)
-- Slippage controlado e variantes com path/minOut
-- Taxa fixa configurável (feeBps) com teto MAX_FEE_BPS
-- Suporte a WETH/ETH em swaps nativos
-- UI resiliente com ErrorBoundary, WalletConnect via Reown AppKit
+### Scripts & Deployment (`scripts/`)
+- **deploy.js**: Smart contract deployment script
+- **simulate.js**: Swap simulation and testing
+- **benchmarkAggregator.mjs**: Performance benchmarking
+- **verify.js**: Contract verification on block explorers
 
-## Requisitos
+### Testing (`test/`)
+- **AggregatorMultiSplit.test.js**: Comprehensive contract tests
+- **fixtures.js**: Test data and mock setups
 
-- Node.js 20+
-- pnpm 10+ (recomendado) ou npm/yarn
-- Carteira EVM (MetaMask ou compatíveis via Reown AppKit)
-- RPC Harmony para leitura/escrita (ou outra rede compatível se adaptar)
+### Documentation (`docs/`)
+- **VitePress-powered documentation site**
+- **Multi-language support** (English, Portuguese)
+- **API documentation**, architecture guides, and setup instructions
 
-## Variáveis de ambiente
+## 🚀 Installation
 
-Crie um arquivo `.env` na raiz com:
+Install project dependencies:
 
-- VITE_REOWN_PROJECT_ID=seu_project_id_reown
-- VITE_RPC_URL_HARMONY=<https://api.harmony.one> (ou seu RPC)
-- VITE_AGGREGATOR_ADDRESS=0x...
+```bash
+# Install smart contract dependencies
+npm install
 
-Opcional (deploy Hardhat):
-- FEE_BPS=25 (taxa padrão em bps para o construtor)
-- WETH_ADDRESS=0x... (para setWETH pós-deploy)
-
-## Como rodar (frontend)
-
-Instale dependências e rode o dev server:
-
-```sh
-pnpm install
-pnpm dev
+# Install frontend dependencies (if running separately)
+cd src && npm install
 ```
 
-Build de produção e preview local:
+## 💻 Usage
 
-```sh
-pnpm build
-pnpm preview
+### Smart Contract Development
+
+Deploy contracts to Harmony network:
+```bash
+# Deploy to Harmony mainnet
+npm run deploy
+
+# Deploy to Harmony testnet  
+npm run deploy:testnet
 ```
 
-## Hardhat (compilar, testar, deploy)
+Run contract simulations:
+```bash
+# Simulate on mainnet
+npm run simulate
 
-Compilar contratos:
-
-```sh
-pnpm compile
+# Simulate on testnet
+npm run simulate:testnet
 ```
 
-Executar testes:
-
-```sh
-pnpm hardhat-test
+Run tests:
+```bash
+npm run test
 ```
 
-Deploy (exemplo Harmony configurado no hardhat.config):
+### Frontend Development
 
-```sh
-pnpm deploy:harmony
+The frontend is configured to run with Vite and includes:
+
+```bash
+# Start development server (configured in vite.config.js)
+npm run dev  # Runs on port 3007 by default
+
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
 ```
 
-Mais detalhes em `docs/setup.md` e `scripts/deploy.js`.
+### Documentation
 
-## Estrutura do projeto (alto nível)
-
-- contracts/ — Solidity (AggregatorV2, libs, mocks)
-- scripts/ — Deploy/auxiliares Hardhat
-- src/
-	- components/ — UI atômica (WalletConnect, Swap, etc.)
-	- layouts/ — Formulários/containers (SwapForm, Header, etc.)
-	- hooks/ — Lógica reutilizável (rotas, slippage, oracle)
-	- services/ — Chamadas de contrato, utilitários (aggregatorService, approvals, etc.)
-	- context/ — `ContractContext` (provider, signer, contratos)
-	- web3/ — `appkit.js` (bootstrap Reown AppKit)
-	- abis/ — JSON ABIs
-
-## Automação com Copilot (Coding Agent)
-
-Para executar tarefas maiores automaticamente (criar branch, aplicar mudanças e abrir PR), use o “Copilot Coding Agent”. O guia completo está em `docs/copilot-agent.md`. Resumo:
-
-1) Ative o GitHub Copilot Chat no VS Code e autentique-se.
-2) Abra este repositório no VS Code.
-3) No chat do Copilot, descreva a tarefa e inclua a tag:
-	 `#github-pull-request_copilot-coding-agent`
-4) O agente criará uma branch, implementará a tarefa e abrirá um PR.
-
-## Licença
-
-MIT — veja `LICENSE.md`.
-
-## Suporte
-
-Abra issues ou PRs. Consulte os documentos em `docs/` para detalhes de arquitetura, APIs e troubleshooting.
-
-## Deploy (produção)
-
-### Produção: Frontend na Vercel + Google API Gateway (recomendado)
-
-O frontend deve apontar para o Google API Gateway que expõe a API externa (por exemplo, `https://dex-monitor-839js5ts.uc.gateway.dev`).
-No ambiente de produção, usamos o Gateway para rotear requisições para `https://whostler.com/api/`.
-
-Variáveis de ambiente úteis (exemplo .env):
-
-```env
-# Google GCP API Gateway
-VITE_API_GATEWAY_URL=https://dex-monitor-839js5ts.uc.gateway.dev
-VITE_API_KEY=AIzaSyCxJ7ZpVbZXGpOk6dMjerLq9jzihWOKAws
-VITE_API_TIMEOUT=10000
-VITE_API_RETRY_COUNT=3
+Generate and serve documentation:
+```bash
+cd docs
+npm run dev     # Development server
+npm run build   # Build static site
+npm run preview # Preview built site
 ```
 
-- Configure na Vercel um rewrite para que chamadas internas ao frontend para `/api/*` sejam encaminhadas ao Gateway (opcional — o frontend já usa o `VITE_API_GATEWAY_URL`):
+## 🔧 Configuration
 
-```json
-{
-	"rewrites": [
-		{ "source": "/api/(.*)", "destination": "https://dex-monitor-839js5ts.uc.gateway.dev/api/$1" }
-	]
-}
-```
+### Environment Variables
+- `WONE_ADDRESS`: Wrapped ONE token address
+- `ROUTERS`: Comma-separated list of DEX router addresses
+- `INTERMEDIATES`: Comma-separated list of intermediate token addresses
+- `FEE_BPS`: Fee in basis points (e.g., 25 = 0.25%)
+- `VITE_PORT`: Frontend development port
+- `VITE_API_GATEWAY_URL`: API gateway URL for backend services
 
-Uso em frontend
-- O app continua chamando `fetch('/api/liquidity')` e `fetch('/api/health')` durante o desenvolvimento. Em produção, o `VITE_API_GATEWAY_URL` deve apontar para o Gateway. Se você preferir apontar diretamente para o backend, defina `VITE_API_GATEWAY_URL=https://whostler.com`.
+### Network Configuration
+The project is configured for Harmony network in `hardhat.config.js` with support for:
+- Harmony mainnet (chainId: 1666600000)
+- Harmony testnet
+- Custom block explorer integration
+- Contract verification setup
 
-Segurança
-- Se o Gateway exigir chave de API, envie o header `x-api-key: <VITE_API_KEY>` nas requisições.
+## 🏗️ Architecture
 
-Observação: A pasta `server/` e o servidor Express foram removidos do fluxo de desenvolvimento — a API agora é uma dependência externa gerenciada fora deste código. Se o diretório `server/` ainda existir localmente no repositório, remova-o com os comandos abaixo (execute na raiz do repositório):
+RecoveryDex follows a modular architecture:
 
-Linux / macOS / WSL:
+1. **Smart Contract Layer**: Handles on-chain logic, routing, and swapping
+2. **Frontend Layer**: React-based user interface with Web3 integration
+3. **Documentation Layer**: VitePress site for comprehensive documentation
+4. **Testing Layer**: Comprehensive test suite for contracts and frontend
 
-```sh
-git rm -r server/
-git commit -m "chore: remove internal server"
-git push
-```
+## 🤝 Contributing
 
-Windows (PowerShell):
+Contributions are welcome! Please feel free to submit issues or pull requests for improvements and bug fixes.
 
-```powershell
-git rm -r server/
-git commit -m "chore: remove internal server"
-git push
-```
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
 
-ou execute os scripts preparados em `scripts/remove-server.sh` ou `scripts/remove-server.ps1`.
+## 📄 License
+
+This project is licensed under the MIT License. See the [LICENSE.md](LICENSE.md) file for details.
+
+## 🔗 Links
+
+- **Documentation**: Comprehensive guides and API references in `/docs`
+- **Frontend Demo**: React application showcasing the aggregator
+- **Smart Contracts**: Deployed on Harmony network with verification

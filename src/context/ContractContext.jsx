@@ -33,7 +33,7 @@ export const ContractProvider = ({ children }) => {
     import.meta.env.VITE_AGGREGATOR_ADDRESS?.toLowerCase() ||
     "0xc5d2136ef39a570dcb9df6b22c730072e9ee8fda";
 
-  const { address, isConnected } = useAppKitAccount();
+  const { address, isConnected, status } = useAppKitAccount();
   const { walletProvider } = useAppKitProvider('eip155');
 
   // Fallback wallet connection function for development
@@ -72,7 +72,8 @@ export const ContractProvider = ({ children }) => {
       }
 
       // Se conectado via AppKit, define account e tenta pegar signer
-      if (isConnected && address) {
+      // IMPORTANTE: aguardar status === 'connected' para evitar corrida com o modal do AppKit
+      if (isConnected && address && status === 'connected') {
         // Definir conta imediatamente para liberar UI dependente apenas da conta
         try {
           setAccount(ethers.getAddress(address));
@@ -90,6 +91,25 @@ export const ContractProvider = ({ children }) => {
 
         if (browserProvider) {
           try {
+            // Confirma que há contas disponíveis no provider antes de getSigner
+            const eip1193 = walletProvider ?? window.ethereum;
+            if (eip1193?.request) {
+              let accounts = [];
+              try {
+                accounts = await eip1193.request({ method: 'eth_accounts' });
+              } catch {}
+              if (!accounts || accounts.length === 0) {
+                // pequeno backoff e retry único
+                await new Promise(r => setTimeout(r, 500));
+                try {
+                  accounts = await eip1193.request({ method: 'eth_accounts' });
+                } catch {}
+              }
+              if (!accounts || accounts.length === 0) {
+                throw new Error('No accounts available yet');
+              }
+            }
+            // Evita conflito com solicitações pendentes do MetaMask (-32002)
             const signerTmp = await browserProvider.getSigner();
             const aggregatorWriteInstance = new ethers.Contract(
               AGG_ADDRESS,
@@ -99,7 +119,18 @@ export const ContractProvider = ({ children }) => {
             setSigner(signerTmp);
             setAggregatorWrite(aggregatorWriteInstance);
           } catch (e) {
-            console.warn('[ContractContext] signer unavailable yet:', e);
+            // Se erro for de requisição pendente, faz um retry leve
+            const msg = String(e?.message || '');
+            const code = e?.code;
+            if (code === -32002 || msg.includes('already pending')) {
+              console.warn('[ContractContext] signer pending request detected, retrying shortly...');
+              setTimeout(() => {
+                // reexecuta init de forma segura
+                initBlockchain().catch(() => {});
+              }, 1200);
+            } else {
+              console.warn('[ContractContext] signer unavailable yet:', e);
+            }
             setSigner(null);
             setAggregatorWrite(null);
           }
@@ -145,11 +176,29 @@ export const ContractProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  }, [AGG_ADDRESS, walletProvider, isConnected, address]);
+  }, [AGG_ADDRESS, walletProvider, isConnected, address, status]);
 
   useEffect(() => {
     // Executa a inicialização sempre que o estado da carteira/fornecedor mudar
     initBlockchain();
+
+    // Reage a eventos EIP-1193 para reconfigurar quando conta/rede mudar
+    if (typeof window !== 'undefined' && window.ethereum) {
+      const handleAccountsChanged = () => {
+        setLoading(true);
+        initBlockchain().catch(() => setLoading(false));
+      };
+      const handleChainChanged = () => {
+        setLoading(true);
+        initBlockchain().catch(() => setLoading(false));
+      };
+      window.ethereum.on?.('accountsChanged', handleAccountsChanged);
+      window.ethereum.on?.('chainChanged', handleChainChanged);
+      return () => {
+        window.ethereum.removeListener?.('accountsChanged', handleAccountsChanged);
+        window.ethereum.removeListener?.('chainChanged', handleChainChanged);
+      };
+    }
   }, [initBlockchain]);
 
   // Carrega token list do JSON estático e injeta o token nativo ONE
@@ -194,14 +243,9 @@ export const ContractProvider = ({ children }) => {
     loading,
     tokenList,
     connectWallet: () => {
-      // First try AppKit
+      // Sempre delega ao AppKit para evitar condição de corrida
       const el = document.querySelector('appkit-button');
-      if (el) {
-        el.click();
-      } else {
-        // Fallback to direct wallet connection
-        connectWalletDirect();
-      }
+      if (el) el.click();
     }
   };
 

@@ -21,11 +21,14 @@ import { initAppKit } from '../web3/appkit';
 import NotificationSystem, { notificationManager } from './NotificationSystem';
 import { setNotificationManager } from '../services/notificationService';
 
+// Debug utilities
+import '../debug/env-check.js';
+import '../debug/appkit-exports.js';
+
 // Pages
 import Home from '../pages/home';
 import LiquidityPage from '../pages/LiquidityPage';
 import TransactionsPage from '../pages/Transactions';
-import Settings from '../pages/settings';
 import AdminPage from '../pages/Admin';
 
 const Layout = () => (
@@ -41,9 +44,20 @@ const Layout = () => (
 const App = () => {
   // Initialize AppKit on app startup
   useEffect(() => {
-    initAppKit();
+    console.log('[App] Starting initialization...');
+    
+    // Initialize AppKit with error handling
+    try {
+      const result = initAppKit();
+      console.log('[App] AppKit initialization result:', result ? 'Success' : 'Failed/Skipped');
+    } catch (error) {
+      console.error('[App] AppKit initialization error:', error);
+    }
+    
     // Connect notification manager to services
     setNotificationManager(notificationManager);
+    
+    console.log('[App] App initialization completed');
   }, []);
 
   return (
@@ -55,7 +69,6 @@ const App = () => {
             <Route path="swap" element={<Home />} />
             <Route path="liquidity" element={<LiquidityPage />} />
             <Route path="transactions" element={<TransactionsPage />} />
-            <Route path="settings" element={<Settings />} />
             <Route path="admin" element={<AdminPage />} />
           </Route>
         </Routes>
