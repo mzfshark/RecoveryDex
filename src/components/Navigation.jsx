@@ -14,6 +14,7 @@ const navItems = [
   { path: "/swap", icon: RiTokenSwapLine,  label: "Swap" },
   { path: "/transactions", icon: TbTransactionBitcoin, label: "Transactions"},
   { path: "/liquidity", icon: MdDashboard, label: "Liquidity" },
+
 ];
 
 // External link for docs
