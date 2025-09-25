@@ -1,57 +1,157 @@
-# Aggregator MultiSplit
+# RecoveryDex - Multi-Split Token Swap Aggregator
 
-Este projeto implementa um contrato inteligente para realizar swaps de tokens na rede Ethereum, permitindo a divisão de uma quantidade de entrada (`amountIn`) em múltiplas operações menores. Isso é feito utilizando rotas com tokens intermediários como Jewel, SONIC ou VIPER, com o objetivo de reduzir o slippage em grandes transações.
+RecoveryDex is a comprehensive DeFi platform that combines smart contract aggregation with an intuitive React frontend. The project implements intelligent token swapping on the Harmony network, allowing users to split large transactions (`amountIn`) into multiple smaller operations using intermediate tokens like JEWEL, SONIC, or VIPER to minimize slippage.
 
-## Estrutura do Projeto
+## 🌟 Features
 
-- **contracts/**: Contém os contratos inteligentes.
-  - **AggregatorMultiSplit.sol**: Implementa a funcionalidade de dividir a `amountIn` em múltiplas operações menores, com whitelist de routers e tokens intermediários.
-  - **interfaces/**: Define as interfaces para interações com contratos externos.
-    - **IUniswapV2Router02.sol**: Interface para o router Uniswap V2.
-    - **IWETH.sol**: Interface para o contrato WETH.
-  - **lib/**: Contém funções utilitárias para manipulação de rotas e cálculos relacionados a swaps.
-    - **RouterLib.sol**: Funções para encontrar a melhor rota e calcular slippage.
+- **Multi-Split Aggregation**: Automatically splits large trades into smaller chunks to reduce slippage
+- **Router Optimization**: Finds the best routes across multiple DEX routers
+- **Intermediate Token Support**: Uses whitelisted intermediate tokens for optimal routing
+- **React Frontend**: Modern, responsive web interface with wallet integration
+- **Documentation Site**: Comprehensive VitePress-powered documentation
+- **Harmony Network**: Optimized for Harmony blockchain with WONE support
 
-- **scripts/**: Scripts para implantar e simular o comportamento dos contratos.
-  - **deploy.js**: Script para implantar o AggregatorMultiSplit na rede.
+## 📁 Project Structure
 
-- **test/**: Contém os testes unitários para os contratos.
-  - **AggregatorV2.spec.ts**: Testes para o contrato AggregatorV2.
-  - **AggregatorV2MultiSplit.spec.ts**: Testes para as novas funcionalidades do contrato AggregatorV2MultiSplit.
+### Smart Contracts (`contracts/`)
+- **AggregatorMultiSplit.sol**: Core contract implementing multi-split functionality with router and intermediate token whitelisting
+- **BandOracle/**: Price oracle integration using Band Protocol
+- **interfaces/**: Contract interfaces for external integrations
+  - **IUniswapV2Router02.sol**: Uniswap V2 router interface
+  - **IWETH.sol**: Wrapped ETH interface
+- **lib/**: Utility libraries for routing and swap calculations
+  - **RouterLib.sol**: Route optimization and slippage calculation functions
+- **Mocks/**: Test contracts for development and testing
 
-- **hardhat.config.js**: Configuração do Hardhat, especificando redes, compiladores e plugins utilizados.
+### Frontend Application (`src/`)
+- **components/**: React components including swap interface, admin panels, and notifications
+- **pages/**: Application pages (Home, Liquidity, Transactions, Settings, Admin)
+- **hooks/**: Custom React hooks for blockchain interactions
+- **services/**: API services and blockchain integration
+- **web3/**: Web3 configuration and wallet connection (AppKit)
+- **context/**: React context providers for state management
 
-- **package.json**: Configuração do npm, listando as dependências e scripts do projeto.
+### Scripts & Deployment (`scripts/`)
+- **deploy.js**: Smart contract deployment script
+- **simulate.js**: Swap simulation and testing
+- **benchmarkAggregator.mjs**: Performance benchmarking
+- **verify.js**: Contract verification on block explorers
 
-- **tsconfig.json**: Configuração do TypeScript, especificando opções do compilador e arquivos a serem incluídos na compilação.
+### Testing (`test/`)
+- **AggregatorMultiSplit.test.js**: Comprehensive contract tests
+- **fixtures.js**: Test data and mock setups
 
-## Instalação
+### Documentation (`docs/`)
+- **VitePress-powered documentation site**
+- **Multi-language support** (English, Portuguese)
+- **API documentation**, architecture guides, and setup instructions
 
-Para instalar as dependências do projeto, execute:
+## 🚀 Installation
 
-```
+Install project dependencies:
+
+```bash
+# Install smart contract dependencies
 npm install
+
+# Install frontend dependencies (if running separately)
+cd src && npm install
 ```
 
-## Uso
+## 💻 Usage
 
-Para implantar os contratos na rede, utilize o script de implantação:
+### Smart Contract Development
 
-```
-npx hardhat deploy:multisplit --network <network_name>
-```
+Deploy contracts to Harmony network:
+```bash
+# Deploy to Harmony mainnet
+npm run deploy
 
-Para simular a execução de swaps com a nova funcionalidade de divisão de operações, execute:
-
-```
-# exemplo (se houver script de simulação)
-# npx hardhat run scripts/simulate-split.ts --network <network_name>
+# Deploy to Harmony testnet  
+npm run deploy:testnet
 ```
 
-## Contribuição
+Run contract simulations:
+```bash
+# Simulate on mainnet
+npm run simulate
 
-Contribuições são bem-vindas! Sinta-se à vontade para abrir issues ou pull requests para melhorias e correções.
+# Simulate on testnet
+npm run simulate:testnet
+```
 
-## Licença
+Run tests:
+```bash
+npm run test
+```
 
-Este projeto está licenciado sob a MIT License. Veja o arquivo LICENSE para mais detalhes.
+### Frontend Development
+
+The frontend is configured to run with Vite and includes:
+
+```bash
+# Start development server (configured in vite.config.js)
+npm run dev  # Runs on port 3007 by default
+
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
+```
+
+### Documentation
+
+Generate and serve documentation:
+```bash
+cd docs
+npm run dev     # Development server
+npm run build   # Build static site
+npm run preview # Preview built site
+```
+
+## 🔧 Configuration
+
+### Environment Variables
+- `WONE_ADDRESS`: Wrapped ONE token address
+- `ROUTERS`: Comma-separated list of DEX router addresses
+- `INTERMEDIATES`: Comma-separated list of intermediate token addresses
+- `FEE_BPS`: Fee in basis points (e.g., 25 = 0.25%)
+- `VITE_PORT`: Frontend development port
+- `VITE_API_GATEWAY_URL`: API gateway URL for backend services
+
+### Network Configuration
+The project is configured for Harmony network in `hardhat.config.js` with support for:
+- Harmony mainnet (chainId: 1666600000)
+- Harmony testnet
+- Custom block explorer integration
+- Contract verification setup
+
+## 🏗️ Architecture
+
+RecoveryDex follows a modular architecture:
+
+1. **Smart Contract Layer**: Handles on-chain logic, routing, and swapping
+2. **Frontend Layer**: React-based user interface with Web3 integration
+3. **Documentation Layer**: VitePress site for comprehensive documentation
+4. **Testing Layer**: Comprehensive test suite for contracts and frontend
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit issues or pull requests for improvements and bug fixes.
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
+
+## 📄 License
+
+This project is licensed under the MIT License. See the [LICENSE.md](LICENSE.md) file for details.
+
+## 🔗 Links
+
+- **Documentation**: Comprehensive guides and API references in `/docs`
+- **Frontend Demo**: React application showcasing the aggregator
+- **Smart Contracts**: Deployed on Harmony network with verification
