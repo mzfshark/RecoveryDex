@@ -10,7 +10,7 @@
               "address": "0xdc54046c0451f9269FEe1840aeC808D36015697d",
               "chainId": 1666600000,
               "decimals": 8,
-              "logoURI": "https://raw.githubusercontent.com/sushiswap/assets/master/blockchains/harmony/assets/0xdc54046c0451f9269FEe1840aeC808D36015697d/logo.png",
+              "logoURI": "/assets/logos/1BTC.png",
               "name": "1BTC",
               "symbol": "1BTC"
             },
@@ -18,7 +18,7 @@
               "address": "0x0aB43550A6915F9f67d0c454C2E90385E6497EaA",
               "chainId": 1666600000,
               "decimals": 18,
-              "logoURI": "https://raw.githubusercontent.com/sushiswap/list/master/logos/token-logos/token/busd.jpg",
+              "logoURI": "/assets/logos/bscBUSD.jpg",
               "name": "BUSD Token",
               "symbol": "bscBUSD"
             },
@@ -26,7 +26,7 @@
               "address": "0x3095c7557bCb296ccc6e363DE01b760bA031F2d9",
               "chainId": 1666600000,
               "decimals": 8,
-              "logoURI": "https://raw.githubusercontent.com/sushiswap/list/master/logos/token-logos/token/btc.jpg",
+              "logoURI": "/assets/logos/wBTC.jpg",
               "name": "Bitcoin",
               "symbol": "BTC"
             },
@@ -34,7 +34,7 @@
               "address": "0xE176EBE47d621b984a73036B9DA5d834411ef734",
               "chainId": 1666600000,
               "decimals": 18,
-              "logoURI": "https://raw.githubusercontent.com/sushiswap/list/master/logos/token-logos/token/busd.jpg",
+              "logoURI": "/assets/logos/BUSD.jpg",
               "name": "Binance USD",
               "symbol": "BUSD"
             },
@@ -42,7 +42,7 @@
               "address": "0xEf977d2f931C1978Db5F6747666fa1eACB0d0339",
               "chainId": 1666600000,
               "decimals": 18,
-              "logoURI": "https://raw.githubusercontent.com/sushiswap/list/master/logos/token-logos/token/dai.jpg",
+              "logoURI": "/assets/logos/DAI.jpg",
               "name": "Dai Stablecoin",
               "symbol": "DAI"
             },
@@ -50,7 +50,7 @@
               "address": "0x6983D1E6DEf3690C4d616b13597A09e6193EA013",
               "chainId": 1666600000,
               "decimals": 18,
-              "logoURI": "https://raw.githubusercontent.com/sushiswap/list/master/logos/token-logos/token/eth.jpg",
+              "logoURI": "/assets/logos/wETH.jpg",
               "name": "Ether",
               "symbol": "ETH"
             },
@@ -58,7 +58,7 @@
               "address": "0xFa7191D292d5633f702B0bd7E3E3BcCC0e633200",
               "chainId": 1666600000,
               "decimals": 18,
-              "logoURI": "https://raw.githubusercontent.com/sushiswap/list/master/logos/token-logos/token/frax.jpg",
+              "logoURI": "/assets/logos/FRAX.png",
               "name": "Frax",
               "symbol": "FRAX"
             },
@@ -66,7 +66,7 @@
               "address": "0x218532a12a389a4a92fC0C5Fb22901D1c19198aA",
               "chainId": 1666600000,
               "decimals": 18,
-              "logoURI": "https://raw.githubusercontent.com/sushiswap/list/master/logos/token-logos/token/link.jpg",
+              "logoURI": "/assets/logos/LINK.png",
               "name": "ChainLink Token",
               "symbol": "LINK"
             },
@@ -74,7 +74,7 @@
               "address": "0x985458E523dB3d53125813eD68c274899e9DfAb4",
               "chainId": 1666600000,
               "decimals": 6,
-              "logoURI": "https://raw.githubusercontent.com/sushiswap/list/master/logos/token-logos/token/usdc.jpg",
+              "logoURI": "/assets/logos/USDC.jpg",
               "name": "USD Coin",
               "symbol": "USDC"
             },
@@ -82,7 +82,7 @@
               "address": "0x3C2B8Be99c50593081EAA2A724F0B8285F5aba8f",
               "chainId": 1666600000,
               "decimals": 6,
-              "logoURI": "https://raw.githubusercontent.com/sushiswap/list/master/logos/token-logos/token/usdt.jpg",
+              "logoURI": "/assets/logos/USDT.jpg",
               "name": "Tether USD",
               "symbol": "USDT"
             },
@@ -90,7 +90,7 @@
               "address": "0xcF664087a5bB0237a0BAd6742852ec6c8d69A27a",
               "chainId": 1666600000,
               "decimals": 18,
-              "logoURI": "https://raw.githubusercontent.com/sushiswap/list/master/logos/token-logos/token/one.jpg",
+              "logoURI": "/assets/logos/WONE.jpg",
               "name": "Wrapped ONE",
               "symbol": "WONE"
             },
@@ -98,7 +98,7 @@
               "address": "0x72Cb10C6bfA5624dD07Ef608027E366bd690048F",
               "chainId": 1666600000,
               "decimals": 18,
-              "logoURI": "https://raw.githubusercontent.com/sushiswap/assets/master/blockchains/harmony/assets/0x72Cb10C6bfA5624dD07Ef608027E366bd690048F/jewel.png",
+              "logoURI": "/assets/logos/jewel.png",
               "name": "JEWEL",
               "symbol": "JEWEL"
             },
@@ -106,7 +106,7 @@
               "address": "0xEa589E93Ff18b1a1F1e9BaC7EF3E86Ab62addc79",
               "chainId": 1666600000,
               "decimals": 18,
-              "logoURI": "https://raw.githubusercontent.com/sushiswap/assets/master/blockchains/harmony/assets/0xEa589E93Ff18b1a1F1e9BaC7EF3E86Ab62addc79/viper.png",
+              "logoURI": "/assets/logos/viper.png",
               "name": "Viper",
               "symbol": "VIPER"
             },
@@ -114,7 +114,7 @@
               "address": "0x1e05C8B69e4128949FcEf16811a819eF2f55D33E",
               "chainId": 1666600000,
               "decimals": 18,
-              "logoURI": "https://raw.githubusercontent.com/sushiswap/assets/master/blockchains/harmony/assets/0x1e05C8B69e4128949FcEf16811a819eF2f55D33E/sonic.png",
+              "logoURI": "/assets/logos/sonic.png",
               "name": "Sonic",
               "symbol": "SONIC"
             }

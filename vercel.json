@@ -68,6 +68,10 @@
     { 
       "source": "/api/(.*)", 
       "destination": "https://whostler.com/api/$1" 
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/"
     }
   ],
   "buildCommand": "pnpm run build",

@@ -1,0 +1,11 @@
+--2025-09-27 10:09:10--  https://cdn.dexscreener.com/cms/images/97e145ffde6cd8f57587991542c9e09d7040c39d46dd84a3772bdcaa3618e44c?width=64
+Resolving cdn.dexscreener.com (cdn.dexscreener.com)... 172.64.149.113, 104.18.38.143, 2a06:98c1:3103::6812:268f, ...
+Connecting to cdn.dexscreener.com (cdn.dexscreener.com)|172.64.149.113|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 1265 (1.2K) [image/jpeg]
+Saving to: ‘97e145ffde6cd8f57587991542c9e09d7040c39d46dd84a3772bdcaa3618e44c?width=64’
+
+                   97e145ffde6cd8f5758   0%[                                                                           ]       0  --.-KB/s               97e145ffde6cd8f57587991542c9e09d7040c3 100%[==========================================================================>]   1.24K  --.-KB/s    in 0.001s  
+
+2025-09-27 10:09:11 (1.48 MB/s) - ‘97e145ffde6cd8f57587991542c9e09d7040c39d46dd84a3772bdcaa3618e44c?width=64’ saved [1265/1265]
+
