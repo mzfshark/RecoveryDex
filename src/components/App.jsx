@@ -30,6 +30,7 @@ import Home from '../pages/home';
 import LiquidityPage from '../pages/LiquidityPage';
 import TransactionsPage from '../pages/Transactions';
 import AdminPage from '../pages/Admin';
+import LPServicePage from '../pages/LPServicePage';
 
 const Layout = () => (
   <>
@@ -68,6 +69,7 @@ const App = () => {
             <Route index element={<Home />} />
             <Route path="swap" element={<Home />} />
             <Route path="liquidity" element={<LiquidityPage />} />
+            <Route path="lp-service" element={<LPServicePage />} />
             <Route path="transactions" element={<TransactionsPage />} />
             <Route path="admin" element={<AdminPage />} />
           </Route>

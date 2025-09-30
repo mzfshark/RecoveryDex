@@ -886,5 +886,444 @@ footer { padding: 5px; }
   }
 }
 
+/* =========================
+   LP RECOVERY SERVICE STYLES
+   ========================= */
+
+/* Page layout */
+.pageContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-lg);
+}
+
+.pageHeader {
+  text-align: center;
+  margin-bottom: var(--space-lg);
+}
+
+.pageDescription {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin: var(--space-md) 0;
+}
+
+/* LP Recovery Container */
+.lpRecoveryContainer {
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--box-shadow-soft);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-lg);
+}
+
+.sectionHeader {
+  text-align: center;
+  margin-bottom: var(--space-lg);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--gray-200);
+}
+
+/* Search Section */
+.searchSection {
+  display: grid;
+  grid-template-columns: 1fr 150px 120px;
+  gap: var(--space-md);
+  align-items: end;
+  margin-bottom: var(--space-lg);
+  padding: var(--space-md);
+  background: var(--foreground);
+  border-radius: var(--radius-md);
+}
+
+@media (max-width: 768px) {
+  .searchSection {
+    grid-template-columns: 1fr;
+    gap: var(--space-sm);
+  }
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.inputGroup label {
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.input {
+  width: 100%;
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  background: var(--input-bg);
+  color: var(--text-primary);
+  font-size: 1rem;
+  transition: border-color var(--transition-fast);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(13, 183, 228, 0.1);
+}
+
+/* Button styles */
+.button {
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-sm);
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+}
+
+.buttonPrimary {
+  background: var(--primary);
+  color: var(--txt-bt-white);
+}
+
+.buttonPrimary:hover {
+  background: var(--primary-600);
+  transform: translateY(-1px);
+}
+
+.buttonPrimary:disabled {
+  background: var(--muted);
+  cursor: not-allowed;
+  transform: none;
+}
+
+.buttonSecondary {
+  background: var(--foreground);
+  color: var(--text-primary);
+  border: 1px solid var(--gray-200);
+}
+
+.buttonSecondary:hover {
+  background: var(--gray-200);
+  transform: translateY(-1px);
+}
+
+.buttonSecondary:disabled {
+  background: var(--foreground);
+  color: var(--muted);
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Selection Controls */
+.selectionControls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+  padding: var(--space-md);
+  background: var(--foreground);
+  border-radius: var(--radius-md);
+  flex-wrap: wrap;
+}
+
+.selectionCount {
+  color: var(--text-secondary);
+  font-weight: 600;
+  margin-left: auto;
+}
+
+@media (max-width: 768px) {
+  .selectionControls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .selectionCount {
+    margin-left: 0;
+    text-align: center;
+  }
+}
+
+/* LP List */
+.lpList {
+  display: grid;
+  gap: var(--space-md);
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .lpList {
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+  }
+}
+
+/* LP Card */
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: all var(--transition-fast);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--box-shadow-strong);
+}
+
+.lpCard {
+  background: var(--card-bg);
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-md);
+  background: var(--foreground);
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.lpInfo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.lpInfo h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+}
+
+.factoryBadge {
+  background: var(--primary);
+  color: var(--txt-bt-white);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* Custom Checkbox */
+.checkbox {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.checkmark {
+  position: relative;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background: var(--input-bg);
+  border: 2px solid var(--gray-200);
+  border-radius: 4px;
+  transition: all var(--transition-fast);
+}
+
+.checkbox input:checked ~ .checkmark {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.checkbox input:checked ~ .checkmark:after {
+  display: block;
+  left: 5px;
+  top: 1px;
+  width: 6px;
+  height: 10px;
+  border: solid var(--txt-bt-white);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+/* LP Details */
+.lpDetails {
+  padding: var(--space-md);
+}
+
+.lpBalance {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-md);
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+.lpBalance span:first-child {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.lpBalance span:last-child {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.tokenAmounts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+  padding: var(--space-sm);
+  background: var(--foreground);
+  border-radius: var(--radius-sm);
+}
+
+.tokenAmount {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.875rem;
+}
+
+.tokenAmount span:first-child {
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.tokenAmount span:last-child {
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+.lpActions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Loading States */
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-lg);
+  color: var(--text-secondary);
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--gray-200);
+  border-top: 4px solid var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Empty State */
+.emptyState {
+  text-align: center;
+  padding: var(--space-lg);
+  color: var(--text-secondary);
+}
+
+.emptyState p {
+  margin-bottom: var(--space-md);
+  font-size: 1.1rem;
+}
+
+/* Info Section */
+.infoSection {
+  margin-top: var(--space-lg);
+  padding: var(--space-lg);
+  background: var(--foreground);
+  border-radius: var(--radius-md);
+  border-left: 4px solid var(--primary);
+}
+
+.infoSection h3,
+.infoSection h4 {
+  color: var(--text-primary);
+  margin-bottom: var(--space-sm);
+}
+
+.infoSection ul {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  padding-left: var(--space-md);
+}
+
+.infoSection li {
+  margin-bottom: var(--space-xs);
+}
+
+.supportedDexs {
+  margin-top: var(--space-md);
+}
+
+.dexList {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+  margin-top: var(--space-sm);
+}
+
+.dexList span {
+  background: var(--card-bg);
+  color: var(--text-primary);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: 16px;
+  font-size: 0.875rem;
+  border: 1px solid var(--gray-200);
+}
+
+/* Disclaimer */
+.disclaimer {
+  background: rgba(255, 111, 163, 0.1);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  margin-top: var(--space-lg);
+}
+
+.disclaimer h3 {
+  color: var(--accent);
+  margin-bottom: var(--space-md);
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.disclaimer ul {
+  color: var(--text-primary);
+  line-height: 1.6;
+  padding-left: var(--space-md);
+}
+
+.disclaimer li {
+  margin-bottom: var(--space-xs);
+}
+
 /* ===== END optimized Global.module.css ===== */
 

@@ -8,12 +8,14 @@ import { RiTokenSwapLine } from "react-icons/ri";
 import { TbTransactionBitcoin } from "react-icons/tb";
 import { SiGoogledocs } from "react-icons/si";
 import { MdDashboard } from "react-icons/md";
+import { BiCoin } from "react-icons/bi";
 
 // Define your pages and labels here
 const navItems = [
   { path: "/swap", icon: RiTokenSwapLine,  label: "Swap" },
   { path: "/transactions", icon: TbTransactionBitcoin, label: "Transactions"},
   { path: "/liquidity", icon: MdDashboard, label: "Liquidity" },
+  { path: "/lp-service", icon: BiCoin, label: "LP Recovery" },
 
 ];
 
