@@ -277,11 +277,10 @@ const LPRecoveryManager = () => {
               <span>
                 {' - Checking pair '} 
                 {searchProgress.pairsChecked || searchProgress.currentPair}
-                {' of '}
-                {searchProgress.maxPairsToCheck || 100}
-                {' ('}
-                {searchProgress.totalPairsInDex}
-                {' total pairs in this DEX)'}
+                {'% of '}
+                {searchProgress.totalPairsInDex || searchProgress.totalPairsInDex}
+                {' pairs founded'}
+                
               </span>
             )}
           </div>
