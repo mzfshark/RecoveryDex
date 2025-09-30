@@ -378,6 +378,110 @@ class LPRecoveryService {
       return null;
     }
   }
+
+  /**
+   * Search for all LPs that the user owns with progress callbacks
+   */
+  async getUserLPsWithProgress(userAddress, onProgress) {
+    if (!ethers.isAddress(userAddress)) {
+      throw new Error("Invalid address");
+    }
+
+    notify.info("Searching", "Looking for user's LPs...", 5000);
+    
+    const userLPs = [];
+    const factories = Object.values(factoryList.UNISWAP.FACTORY);
+    const factoryNames = Object.keys(factoryList.UNISWAP.FACTORY);
+
+    try {
+      // For each factory, search all pairs and check if user has LP tokens
+      for (let factoryIndex = 0; factoryIndex < factories.length; factoryIndex++) {
+        const factoryAddress = factories[factoryIndex];
+        const factoryName = factoryNames[factoryIndex];
+        
+        // Update progress - starting new DEX
+        onProgress({
+          currentDex: factoryName,
+          currentDexIndex: factoryIndex + 1,
+          foundLPs: userLPs.length
+        });
+        
+        console.log(`[LPRecovery] Checking factory: ${factoryAddress} (${factoryName})`);
+        
+        try {
+          const factoryContract = new ethers.Contract(factoryAddress, UNISWAP_V2_FACTORY_ABI, this.provider);
+          
+          // Get total number of pairs
+          const totalPairs = await factoryContract.allPairsLength();
+          console.log(`[LPRecovery] Total pairs in factory ${factoryAddress}: ${totalPairs}`);
+          
+          // Check first 100 pairs (optimization to avoid timeout)
+          const maxPairs = Math.min(Number(totalPairs), 100);
+          
+          // Update progress with pair info
+          onProgress({
+            currentDex: factoryName,
+            currentDexIndex: factoryIndex + 1,
+            foundLPs: userLPs.length,
+            currentPair: 0,
+            totalPairsInDex: maxPairs
+          });
+          
+          for (let i = 0; i < maxPairs; i++) {
+            try {
+              const pairAddress = await factoryContract.allPairs(i);
+              const lpData = await this.checkUserLPBalance(pairAddress, userAddress);
+              
+              if (lpData.balance > 0n) {
+                userLPs.push({
+                  ...lpData,
+                  factoryAddress,
+                  factoryName: this.getFactoryName(factoryAddress)
+                });
+              }
+              
+              // Update progress every 5 pairs
+              if (i % 5 === 0 || i === maxPairs - 1) {
+                onProgress({
+                  currentDex: factoryName,
+                  currentDexIndex: factoryIndex + 1,
+                  foundLPs: userLPs.length,
+                  currentPair: i + 1,
+                  totalPairsInDex: maxPairs
+                });
+              }
+              
+            } catch (error) {
+              console.warn(`[LPRecovery] Error checking pair ${i}:`, error.message);
+            }
+            
+            // Small delay to avoid rate limiting
+            if (i % 10 === 0 && i > 0) {
+              await new Promise(resolve => setTimeout(resolve, 100));
+            }
+          }
+        } catch (error) {
+          console.warn(`[LPRecovery] Error in factory ${factoryAddress}:`, error.message);
+        }
+      }
+
+      // Final progress update
+      onProgress({
+        currentDex: 'Complete',
+        currentDexIndex: factories.length,
+        foundLPs: userLPs.length,
+        currentPair: 0,
+        totalPairsInDex: 0
+      });
+
+      notify.success("Found", `${userLPs.length} LP(s) found`, 3000);
+      return userLPs;
+    } catch (error) {
+      console.error("[LPRecovery] Error searching LPs:", error);
+      notify.error("Error", "Error searching LPs: " + error.message);
+      throw error;
+    }
+  }
 }
 
 // Singleton instance

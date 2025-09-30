@@ -5,6 +5,7 @@ import { useAppKit, useAppKitAccount } from '@reown/appkit/react';
 import lpRecoveryService from '../services/lpRecoveryService';
 import { getProvider } from '../services/provider';
 import { notify } from '../services/notificationService';
+import factoryData from '../factory.json';
 import styles from '../styles/Global.module.css';
 
 const LPRecoveryManager = () => {
@@ -12,6 +13,35 @@ const LPRecoveryManager = () => {
   const { address, isConnected } = useAppKitAccount();
   const { open } = useAppKit();
   const [appKitReady, setAppKitReady] = useState(false);
+  
+  // Get supported DEXs from factory.json
+  const supportedDexs = Object.keys(factoryData.UNISWAP.FACTORY);
+  
+  // Format DEX name for display
+  const formatDexName = (dexKey) => {
+    // Handle special cases
+    const specialCases = {
+      'DFK': 'DFK',
+      'OPENX': 'OpenX',
+      'ELK': 'Elk',
+      'FUZZ': 'Fuzz',
+      'MOCHI': 'Mochi',
+      'UDEX': 'UDEX',
+      'EGG': 'Egg',
+      'FATEXDAO': 'FatexDAO',
+      'COPYPASTA': 'CopyPasta',
+      'SMUG': 'Smug',
+      'LOCKSWAP': 'LockSwap',
+      'WAGMIGMI': 'WagmiGMI'
+    };
+    
+    if (specialCases[dexKey]) {
+      return specialCases[dexKey];
+    }
+    
+    // Default formatting: capitalize first letter and lowercase the rest
+    return dexKey.charAt(0).toUpperCase() + dexKey.slice(1).toLowerCase();
+  };
   
   // Simple AppKit ready check
   useEffect(() => {
@@ -35,6 +65,17 @@ const LPRecoveryManager = () => {
   const [selectedLPs, setSelectedLPs] = useState(new Set());
   const [searchAddress, setSearchAddress] = useState('');
   const [processing, setProcessing] = useState(false);
+  
+  // Progress tracking states
+  const [searchProgress, setSearchProgress] = useState({
+    currentDex: '',
+    currentDexIndex: 0,
+    totalDexs: supportedDexs.length,
+    foundLPs: 0,
+    currentPair: 0,
+    totalPairsInDex: 0,
+    isSearching: false
+  });
 
   // Initialize service when connecting
   useEffect(() => {
@@ -75,10 +116,30 @@ const LPRecoveryManager = () => {
     setLoading(true);
     setUserLPs([]);
     setSelectedLPs(new Set());
+    
+    // Reset progress
+    setSearchProgress({
+      currentDex: '',
+      currentDexIndex: 0,
+      totalDexs: supportedDexs.length,
+      foundLPs: 0,
+      currentPair: 0,
+      totalPairsInDex: 0,
+      isSearching: true
+    });
 
     try {
       await initializeService();
-      const lps = await lpRecoveryService.getUserLPs(addressToSearch);
+      
+      // Progress callback function
+      const onProgress = (progress) => {
+        setSearchProgress(prev => ({
+          ...prev,
+          ...progress
+        }));
+      };
+      
+      const lps = await lpRecoveryService.getUserLPsWithProgress(addressToSearch, onProgress);
       setUserLPs(lps);
       
       if (lps.length === 0) {
@@ -89,6 +150,7 @@ const LPRecoveryManager = () => {
       notify.error("Error", "Error searching LPs: " + error.message);
     } finally {
       setLoading(false);
+      setSearchProgress(prev => ({ ...prev, isSearching: false }));
     }
   };
 
@@ -176,6 +238,72 @@ const LPRecoveryManager = () => {
     if (num === 0) return "0";
     if (num < 0.0001) return "< 0.0001";
     return num.toFixed(decimals);
+  };
+
+  // Progress Bar Component
+  const ProgressBar = () => {
+    const progressPercentage = searchProgress.totalDexs > 0 
+      ? Math.round((searchProgress.currentDexIndex / searchProgress.totalDexs) * 100)
+      : 0;
+    
+    const pairProgress = searchProgress.totalPairsInDex > 0
+      ? Math.round((searchProgress.currentPair / searchProgress.totalPairsInDex) * 100)
+      : 0;
+
+    return (
+      <div className={styles.progressContainer}>
+        <div className={styles.progressHeader}>
+          <h3>Searching for LP Tokens...</h3>
+          <span className={styles.progressStats}>
+            {searchProgress.foundLPs} LPs found so far
+          </span>
+        </div>
+        
+        <div className={styles.progressInfo}>
+          <div className={styles.currentDex}>
+            <strong>Current DEX:</strong> {formatDexName(searchProgress.currentDex)}
+          </div>
+          <div className={styles.progressText}>
+            DEX {searchProgress.currentDexIndex} of {searchProgress.totalDexs}
+            {searchProgress.totalPairsInDex > 0 && (
+              <span> - Pair {searchProgress.currentPair} of {searchProgress.totalPairsInDex}</span>
+            )}
+          </div>
+        </div>
+
+        <div className={styles.progressBarContainer}>
+          <div className={styles.progressBarLabel}>
+            <span>Overall Progress</span>
+            <span>{progressPercentage}%</span>
+          </div>
+          <div className={styles.progressBar}>
+            <div 
+              className={styles.progressBarFill}
+              style={{ width: `${progressPercentage}%` }}
+            />
+          </div>
+        </div>
+
+        {searchProgress.totalPairsInDex > 0 && (
+          <div className={styles.progressBarContainer}>
+            <div className={styles.progressBarLabel}>
+              <span>{formatDexName(searchProgress.currentDex)} Progress</span>
+              <span>{pairProgress}%</span>
+            </div>
+            <div className={styles.progressBar}>
+              <div 
+                className={styles.progressBarFill}
+                style={{ width: `${pairProgress}%` }}
+              />
+            </div>
+          </div>
+        )}
+
+        <div className={styles.progressNote}>
+          <p>This process analyzes all pairs across {supportedDexs.length} DEXs. Please wait...</p>
+        </div>
+      </div>
+    );
   };
 
   const LPCard = ({ lp, index }) => (
@@ -290,10 +418,7 @@ const LPRecoveryManager = () => {
 
       {/* LP List */}
       {loading ? (
-        <div className={styles.loading}>
-          <div className={styles.spinner}></div>
-          <p>Searching LPs... This may take a few minutes</p>
-        </div>
+        <ProgressBar />
       ) : userLPs.length > 0 ? (
         <div className={styles.lpList}>
           {userLPs.map((lp, index) => (
@@ -325,13 +450,11 @@ const LPRecoveryManager = () => {
         </ul>
         
         <div className={styles.supportedDexs}>
-          <h4>Supported DEXs:</h4>
+          <h4>Supported DEXs ({supportedDexs.length}):</h4>
           <div className={styles.dexList}>
-            <span>ViperSwap</span>
-            <span>SushiSwap</span>
-            <span>DFK</span>
-            <span>Defira</span>
-            <span>And more...</span>
+            {supportedDexs.map((dexKey) => (
+              <span key={dexKey}>{formatDexName(dexKey)}</span>
+            ))}
           </div>
         </div>
       </div>
