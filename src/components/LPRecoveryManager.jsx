@@ -74,6 +74,8 @@ const LPRecoveryManager = () => {
     foundLPs: 0,
     currentPair: 0,
     totalPairsInDex: 0,
+    maxPairsToCheck: 100,
+    pairsChecked: 0,
     isSearching: false
   });
 
@@ -125,6 +127,8 @@ const LPRecoveryManager = () => {
       foundLPs: 0,
       currentPair: 0,
       totalPairsInDex: 0,
+      maxPairsToCheck: 100,
+      pairsChecked: 0,
       isSearching: true
     });
 
@@ -246,8 +250,12 @@ const LPRecoveryManager = () => {
       ? Math.round((searchProgress.currentDexIndex / searchProgress.totalDexs) * 100)
       : 0;
     
-    const pairProgress = searchProgress.totalPairsInDex > 0
-      ? Math.round((searchProgress.currentPair / searchProgress.totalPairsInDex) * 100)
+    // Calculate progress based on pairs actually checked vs max pairs to check (limited to 100)
+    // But show the real total in the display
+    const pairsToCheck = searchProgress.maxPairsToCheck || 100;
+    const pairsChecked = searchProgress.pairsChecked || searchProgress.currentPair;
+    const pairProgress = pairsToCheck > 0
+      ? Math.round((pairsChecked / pairsToCheck) * 100)
       : 0;
 
     return (
@@ -266,7 +274,15 @@ const LPRecoveryManager = () => {
           <div className={styles.progressText}>
             DEX {searchProgress.currentDexIndex} of {searchProgress.totalDexs}
             {searchProgress.totalPairsInDex > 0 && (
-              <span> - Pair {searchProgress.currentPair} of {searchProgress.totalPairsInDex}</span>
+              <span>
+                {' - Checking pair '} 
+                {searchProgress.pairsChecked || searchProgress.currentPair}
+                {' of '}
+                {searchProgress.maxPairsToCheck || 100}
+                {' ('}
+                {searchProgress.totalPairsInDex}
+                {' total pairs in this DEX)'}
+              </span>
             )}
           </div>
         </div>

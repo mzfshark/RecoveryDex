@@ -413,18 +413,20 @@ class LPRecoveryService {
           
           // Get total number of pairs
           const totalPairs = await factoryContract.allPairsLength();
-          console.log(`[LPRecovery] Total pairs in factory ${factoryAddress}: ${totalPairs}`);
+          const totalPairsNumber = Number(totalPairs);
+          console.log(`[LPRecovery] Total pairs in factory ${factoryAddress}: ${totalPairsNumber}`);
           
           // Check first 100 pairs (optimization to avoid timeout)
-          const maxPairs = Math.min(Number(totalPairs), 100);
+          const maxPairs = Math.min(totalPairsNumber, 100);
           
-          // Update progress with pair info
+          // Update progress with pair info - use real total pairs for progress calculation
           onProgress({
             currentDex: factoryName,
             currentDexIndex: factoryIndex + 1,
             foundLPs: userLPs.length,
             currentPair: 0,
-            totalPairsInDex: maxPairs
+            totalPairsInDex: totalPairsNumber, // Use real total, not limited
+            maxPairsToCheck: maxPairs // Add info about how many we'll actually check
           });
           
           for (let i = 0; i < maxPairs; i++) {
@@ -447,7 +449,9 @@ class LPRecoveryService {
                   currentDexIndex: factoryIndex + 1,
                   foundLPs: userLPs.length,
                   currentPair: i + 1,
-                  totalPairsInDex: maxPairs
+                  totalPairsInDex: totalPairsNumber, // Use real total
+                  maxPairsToCheck: maxPairs,
+                  pairsChecked: i + 1
                 });
               }
               
