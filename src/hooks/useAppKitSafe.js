@@ -1,54 +1,46 @@
 // src/hooks/useAppKitSafe.js
 import { useState, useEffect } from 'react';
-
-let appKitHooks = null;
-
-// Try to import AppKit hooks safely
-try {
-  const { useAppKit, useAppKitAccount } = require('@reown/appkit/react');
-  appKitHooks = { useAppKit, useAppKitAccount };
-} catch (error) {
-  console.warn('[AppKit] Failed to load AppKit hooks:', error.message);
-}
+import { useAppKit, useAppKitAccount } from '@reown/appkit/react';
 
 export function useAppKitSafe() {
-  const [isReady, setIsReady] = useState(false);
+  const [isAppKitReady, setIsAppKitReady] = useState(false);
   
   useEffect(() => {
-    // Small delay to ensure AppKit is initialized
-    const timer = setTimeout(() => {
-      setIsReady(true);
-    }, 100);
-    
-    return () => clearTimeout(timer);
+    // Check if we're in a browser environment and AppKit is available
+    if (typeof window !== 'undefined') {
+      // Small delay to ensure AppKit is properly initialized
+      const timer = setTimeout(() => {
+        console.log('[AppKit] Setting ready state to true');
+        setIsAppKitReady(true);
+      }, 500);
+      
+      return () => clearTimeout(timer);
+    }
   }, []);
   
-  if (!appKitHooks || !isReady) {
-    return {
-      address: null,
-      isConnected: false,
-      open: () => console.warn('AppKit not available'),
-      isAppKitReady: false
-    };
-  }
+  // Always try to use hooks, but handle errors gracefully
+  let address = null;
+  let isConnected = false;
+  let open = () => console.warn('AppKit not available');
   
   try {
-    const { address, isConnected } = appKitHooks.useAppKitAccount();
-    const { open } = appKitHooks.useAppKit();
+    const accountData = useAppKitAccount();
+    const appKit = useAppKit();
     
-    return {
-      address,
-      isConnected,
-      open,
-      isAppKitReady: true
-    };
+    address = accountData.address;
+    isConnected = accountData.isConnected;
+    open = appKit.open;
+    
+    console.log('[AppKit] Hooks working, isReady:', isAppKitReady, 'isConnected:', isConnected);
   } catch (error) {
     console.warn('[AppKit] Hook execution failed:', error.message);
-    return {
-      address: null,
-      isConnected: false,
-      open: () => console.warn('AppKit not available'),
-      isAppKitReady: false
-    };
+    // Keep default values
   }
+  
+  return {
+    address,
+    isConnected,
+    open,
+    isAppKitReady
+  };
 }

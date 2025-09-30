@@ -1,15 +1,34 @@
 // src/components/LPRecoveryManager.jsx
 import React, { useState, useEffect, useCallback } from 'react';
 import { ethers } from 'ethers';
+import { useAppKit, useAppKitAccount } from '@reown/appkit/react';
 import lpRecoveryService from '../services/lpRecoveryService';
 import { getProvider } from '../services/provider';
 import { notify } from '../services/notificationService';
-import { useAppKitSafe } from '../hooks/useAppKitSafe';
 import styles from '../styles/Global.module.css';
 
 const LPRecoveryManager = () => {
-  // Use safe AppKit hook
-  const { address, isConnected, open, isAppKitReady } = useAppKitSafe();
+  // Use AppKit hooks directly
+  const { address, isConnected } = useAppKitAccount();
+  const { open } = useAppKit();
+  const [appKitReady, setAppKitReady] = useState(false);
+  
+  // Simple AppKit ready check
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setAppKitReady(true);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
+  
+  // Debug logging
+  useEffect(() => {
+    console.log('[LPManager] AppKit state:', { 
+      appKitReady, 
+      isConnected, 
+      address: address ? `${address.slice(0,6)}...${address.slice(-4)}` : 'null' 
+    });
+  }, [appKitReady, isConnected, address]);
   
   const [userLPs, setUserLPs] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -208,7 +227,7 @@ const LPRecoveryManager = () => {
   );
 
   // Show loading while AppKit is initializing
-  if (!isAppKitReady) {
+  if (!appKitReady) {
     return (
       <div className={styles.lpRecoveryContainer}>
         <div className={styles.loadingContainer}>
