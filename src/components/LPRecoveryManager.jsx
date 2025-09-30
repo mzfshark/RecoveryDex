@@ -628,15 +628,6 @@ const LPRecoveryManager = () => {
           <li>Execute individual or batch removal</li>
         </ul>
         
-        <div className={styles.optimizationInfo}>
-          <h4>⚡ Performance Optimization:</h4>
-          <p>
-            This service now uses Harmony's Blockscout API for ultra-fast LP discovery. 
-            Instead of checking thousands of pairs, it only validates tokens you actually own.
-            <br />
-            <strong>Result:</strong> ~99% faster searches (seconds vs minutes)
-          </p>
-        </div>
         
         <div className={styles.supportedDexs}>
           <h4>
