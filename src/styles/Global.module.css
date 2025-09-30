@@ -894,12 +894,12 @@ footer { padding: 5px; }
 .pageContainer {
   max-width: 1200px;
   margin: 0 auto;
-  padding: var(--space-lg);
+  padding: var(--space-xs);
 }
 
 .pageHeader {
   text-align: center;
-  margin-bottom: var(--space-lg);
+  margin-bottom: var(--space-md);
 }
 
 .pageDescription {
@@ -928,13 +928,23 @@ footer { padding: 5px; }
 /* Search Section */
 .searchSection {
   display: grid;
-  grid-template-columns: 1fr 150px 120px;
+  grid-template-columns: 1fr 120px;
   gap: var(--space-md);
   align-items: end;
   margin-bottom: var(--space-lg);
   padding: var(--space-md);
   background: var(--foreground);
   border-radius: var(--radius-md);
+}
+
+.inputSearch {
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  background: var(--input-bg);
+  color: var(--text-primary);
+  font-size: 1rem;
+  transition: border-color var(--transition-fast);
 }
 
 @media (max-width: 768px) {

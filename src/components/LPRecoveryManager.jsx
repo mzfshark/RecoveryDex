@@ -1,20 +1,19 @@
 // src/components/LPRecoveryManager.jsx
 import React, { useState, useEffect, useCallback } from 'react';
 import { ethers } from 'ethers';
-import { useAppKit, useAppKitAccount } from '@reown/appkit/react';
 import lpRecoveryService from '../services/lpRecoveryService';
 import { getProvider } from '../services/provider';
 import { notify } from '../services/notificationService';
+import { useAppKitSafe } from '../hooks/useAppKitSafe';
 import styles from '../styles/Global.module.css';
 
 const LPRecoveryManager = () => {
-  const { address, isConnected } = useAppKitAccount();
-  const { open } = useAppKit();
+  // Use safe AppKit hook
+  const { address, isConnected, open, isAppKitReady } = useAppKitSafe();
   
   const [userLPs, setUserLPs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedLPs, setSelectedLPs] = useState(new Set());
-  const [slippage, setSlippage] = useState(5);
   const [searchAddress, setSearchAddress] = useState('');
   const [processing, setProcessing] = useState(false);
 
@@ -101,7 +100,7 @@ const LPRecoveryManager = () => {
     setProcessing(true);
     try {
       await initializeService();
-      await lpRecoveryService.removeLiquidity(lpData, slippage);
+      await lpRecoveryService.removeLiquidity(lpData);
       
       // Remove LP from list after success
       setUserLPs(prev => prev.filter((_, i) => i !== index));
@@ -132,7 +131,7 @@ const LPRecoveryManager = () => {
     try {
       await initializeService();
       const selectedLPData = Array.from(selectedLPs).map(index => userLPs[index]);
-      const results = await lpRecoveryService.removeLiquidityBatch(selectedLPData, slippage);
+      const results = await lpRecoveryService.removeLiquidityBatch(selectedLPData);
       
       // Remove successful LPs from list
       const successfulIndices = new Set();
@@ -208,12 +207,20 @@ const LPRecoveryManager = () => {
     </div>
   );
 
+  // Show loading while AppKit is initializing
+  if (!isAppKitReady) {
+    return (
+      <div className={styles.lpRecoveryContainer}>
+        <div className={styles.loadingContainer}>
+          <div className={styles.loadingSpinner}></div>
+          <p>Initializing wallet connection...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.lpRecoveryContainer}>
-      <div className={styles.sectionHeader}>
-        <h2>LP Recovery Service</h2>
-        <p>Recover your liquidity tokens from Uniswap V2 pairs</p>
-      </div>
 
       {/* Search controls */}
       <div className={styles.searchSection}>
@@ -224,20 +231,7 @@ const LPRecoveryManager = () => {
             placeholder="0x..."
             value={searchAddress}
             onChange={(e) => setSearchAddress(e.target.value)}
-            className={styles.input}
-          />
-        </div>
-        
-        <div className={styles.inputGroup}>
-          <label>Slippage (%):</label>
-          <input
-            type="number"
-            min="0.1"
-            max="50"
-            step="0.1"
-            value={slippage}
-            onChange={(e) => setSlippage(parseFloat(e.target.value) || 5)}
-            className={styles.input}
+            className={styles.inputSearch}
           />
         </div>
         
@@ -308,7 +302,6 @@ const LPRecoveryManager = () => {
           <li>Enter an address or use your connected wallet</li>
           <li>The system searches LPs on all supported DEXs</li>
           <li>Select the LPs you want to remove</li>
-          <li>Configure desired slippage (default: 5%)</li>
           <li>Execute individual or batch removal</li>
         </ul>
         

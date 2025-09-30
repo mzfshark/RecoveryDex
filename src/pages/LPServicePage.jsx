@@ -10,6 +10,8 @@ const LPServicePage = () => {
         <h1>LP Recovery Service</h1>
         <p className={styles.pageDescription}>
           Recover your liquidity tokens from Uniswap V2 pairs on all supported DEXs on Harmony.
+        </p>
+        <p>
           This service allows you to find and remove liquidity from your forgotten or lost LPs.
         </p>
       </div>
