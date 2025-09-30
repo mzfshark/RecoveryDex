@@ -18,7 +18,7 @@ const LPRecoveryManager = () => {
   const [searchAddress, setSearchAddress] = useState('');
   const [processing, setProcessing] = useState(false);
 
-  // Inicializar o serviço quando conectar
+  // Initialize service when connecting
   useEffect(() => {
     if (isConnected && address) {
       initializeService();
@@ -30,7 +30,7 @@ const LPRecoveryManager = () => {
     try {
       const provider = getProvider();
       if (!provider) {
-        throw new Error("Provider não disponível");
+        throw new Error("Provider not available");
       }
       
       let signer = null;
@@ -41,8 +41,8 @@ const LPRecoveryManager = () => {
       
       await lpRecoveryService.initialize(signer);
     } catch (error) {
-      console.error("[LPManager] Erro ao inicializar serviço:", error);
-      notify.error("Erro", "Erro ao inicializar serviço: " + error.message);
+      console.error("[LPManager] Error initializing service:", error);
+      notify.error("Error", "Error initializing service: " + error.message);
     }
   };
 
@@ -50,7 +50,7 @@ const LPRecoveryManager = () => {
     const addressToSearch = targetAddress || searchAddress || address;
     
     if (!addressToSearch || !ethers.isAddress(addressToSearch)) {
-      notify.error("Erro", "Endereço inválido");
+      notify.error("Error", "Invalid address");
       return;
     }
 
@@ -64,11 +64,11 @@ const LPRecoveryManager = () => {
       setUserLPs(lps);
       
       if (lps.length === 0) {
-        notify.info("Info", "Nenhum LP encontrado para este endereço", 3000);
+        notify.info("Info", "No LP found for this address", 3000);
       }
     } catch (error) {
-      console.error("[LPManager] Erro ao buscar LPs:", error);
-      notify.error("Erro", "Erro ao buscar LPs: " + error.message);
+      console.error("[LPManager] Error searching LPs:", error);
+      notify.error("Error", "Error searching LPs: " + error.message);
     } finally {
       setLoading(false);
     }
@@ -94,7 +94,7 @@ const LPRecoveryManager = () => {
 
   const removeSingleLP = async (lpData, index) => {
     if (!isConnected) {
-      notify.error("Erro", "Conecte sua carteira primeiro");
+      notify.error("Error", "Connect your wallet first");
       return;
     }
 
@@ -103,7 +103,7 @@ const LPRecoveryManager = () => {
       await initializeService();
       await lpRecoveryService.removeLiquidity(lpData, slippage);
       
-      // Remover o LP da lista após sucesso
+      // Remove LP from list after success
       setUserLPs(prev => prev.filter((_, i) => i !== index));
       setSelectedLPs(prev => {
         const newSet = new Set(prev);
@@ -111,7 +111,7 @@ const LPRecoveryManager = () => {
         return newSet;
       });
     } catch (error) {
-      console.error("[LPManager] Erro ao remover LP:", error);
+      console.error("[LPManager] Error removing LP:", error);
     } finally {
       setProcessing(false);
     }
@@ -119,12 +119,12 @@ const LPRecoveryManager = () => {
 
   const removeSelectedLPs = async () => {
     if (!isConnected) {
-      notify.error("Erro", "Conecte sua carteira primeiro");
+      notify.error("Error", "Connect your wallet first");
       return;
     }
 
     if (selectedLPs.size === 0) {
-      notify.error("Erro", "Selecione pelo menos um LP");
+      notify.error("Error", "Select at least one LP");
       return;
     }
 
@@ -134,7 +134,7 @@ const LPRecoveryManager = () => {
       const selectedLPData = Array.from(selectedLPs).map(index => userLPs[index]);
       const results = await lpRecoveryService.removeLiquidityBatch(selectedLPData, slippage);
       
-      // Remover LPs bem-sucedidos da lista
+      // Remove successful LPs from list
       const successfulIndices = new Set();
       results.forEach((result, i) => {
         if (result.success) {
@@ -147,7 +147,7 @@ const LPRecoveryManager = () => {
       setSelectedLPs(new Set());
       
     } catch (error) {
-      console.error("[LPManager] Erro ao remover LPs:", error);
+      console.error("[LPManager] Error removing LPs:", error);
     } finally {
       setProcessing(false);
     }
@@ -201,7 +201,7 @@ const LPRecoveryManager = () => {
             onClick={() => removeSingleLP(lp, index)}
             disabled={processing}
           >
-            {processing ? "Removendo..." : "Remover LP"}
+            {processing ? "Removing..." : "Remove LP"}
           </button>
         </div>
       </div>
@@ -212,13 +212,13 @@ const LPRecoveryManager = () => {
     <div className={styles.lpRecoveryContainer}>
       <div className={styles.sectionHeader}>
         <h2>LP Recovery Service</h2>
-        <p>Recupere seus tokens de liquidez de pares Uniswap V2</p>
+        <p>Recover your liquidity tokens from Uniswap V2 pairs</p>
       </div>
 
-      {/* Controles de busca */}
+      {/* Search controls */}
       <div className={styles.searchSection}>
         <div className={styles.inputGroup}>
-          <label>Endereço para buscar LPs:</label>
+          <label>Address to search LPs:</label>
           <input
             type="text"
             placeholder="0x..."
@@ -246,11 +246,11 @@ const LPRecoveryManager = () => {
           onClick={() => searchUserLPs()}
           disabled={loading}
         >
-          {loading ? "Buscando..." : "Buscar LPs"}
+          {loading ? "Searching..." : "Search LPs"}
         </button>
       </div>
 
-      {/* Controles de seleção */}
+      {/* Selection controls */}
       {userLPs.length > 0 && (
         <div className={styles.selectionControls}>
           <button
@@ -258,11 +258,11 @@ const LPRecoveryManager = () => {
             onClick={selectAllLPs}
             disabled={processing}
           >
-            {selectedLPs.size === userLPs.length ? "Desmarcar Todos" : "Selecionar Todos"}
+            {selectedLPs.size === userLPs.length ? "Unselect All" : "Select All"}
           </button>
           
           <span className={styles.selectionCount}>
-            {selectedLPs.size} de {userLPs.length} selecionados
+            {selectedLPs.size} of {userLPs.length} selected
           </span>
           
           <button
@@ -270,16 +270,16 @@ const LPRecoveryManager = () => {
             onClick={removeSelectedLPs}
             disabled={processing || selectedLPs.size === 0}
           >
-            {processing ? "Processando..." : "Remover Selecionados"}
+            {processing ? "Processing..." : "Remove Selected"}
           </button>
         </div>
       )}
 
-      {/* Lista de LPs */}
+      {/* LP List */}
       {loading ? (
         <div className={styles.loading}>
           <div className={styles.spinner}></div>
-          <p>Buscando LPs... Isso pode levar alguns minutos</p>
+          <p>Searching LPs... This may take a few minutes</p>
         </div>
       ) : userLPs.length > 0 ? (
         <div className={styles.lpList}>
@@ -289,37 +289,37 @@ const LPRecoveryManager = () => {
         </div>
       ) : (
         <div className={styles.emptyState}>
-          <p>Nenhum LP encontrado. Use o campo de busca acima para procurar LPs.</p>
+          <p>No LP found. Use the search field above to look for LPs.</p>
           {!isConnected && (
             <button
               className={`${styles.button} ${styles.buttonPrimary}`}
               onClick={() => open()}
             >
-              Conectar Carteira
+              Connect Wallet
             </button>
           )}
         </div>
       )}
 
-      {/* Informações adicionais */}
+      {/* Additional information */}
       <div className={styles.infoSection}>
-        <h3>Como funciona:</h3>
+        <h3>How it works:</h3>
         <ul>
-          <li>Digite um endereço ou use sua carteira conectada</li>
-          <li>O sistema busca LPs em todos os DEXs suportados</li>
-          <li>Selecione os LPs que deseja remover</li>
-          <li>Configure o slippage desejado (padrão: 5%)</li>
-          <li>Execute a remoção individual ou em lote</li>
+          <li>Enter an address or use your connected wallet</li>
+          <li>The system searches LPs on all supported DEXs</li>
+          <li>Select the LPs you want to remove</li>
+          <li>Configure desired slippage (default: 5%)</li>
+          <li>Execute individual or batch removal</li>
         </ul>
         
         <div className={styles.supportedDexs}>
-          <h4>DEXs Suportados:</h4>
+          <h4>Supported DEXs:</h4>
           <div className={styles.dexList}>
             <span>ViperSwap</span>
             <span>SushiSwap</span>
             <span>DFK</span>
             <span>Defira</span>
-            <span>E mais...</span>
+            <span>And more...</span>
           </div>
         </div>
       </div>

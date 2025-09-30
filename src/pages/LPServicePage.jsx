@@ -9,21 +9,21 @@ const LPServicePage = () => {
       <div className={styles.pageHeader}>
         <h1>LP Recovery Service</h1>
         <p className={styles.pageDescription}>
-          Recupere seus tokens de liquidez de pares Uniswap V2 em todos os DEXs suportados na Harmony.
-          Este serviço permite que você encontre e remova liquidez de seus LPs esquecidos ou perdidos.
+          Recover your liquidity tokens from Uniswap V2 pairs on all supported DEXs on Harmony.
+          This service allows you to find and remove liquidity from your forgotten or lost LPs.
         </p>
       </div>
       
       <LPRecoveryManager />
       
       <div className={styles.disclaimer}>
-        <h3>⚠️ Aviso Importante:</h3>
+        <h3>⚠️ Important Warning:</h3>
         <ul>
-          <li>Sempre verifique os endereços dos contratos antes de aprovar transações</li>
-          <li>Configure um slippage adequado para evitar falhas nas transações</li>
-          <li>Este serviço é experimental - use por sua própria conta e risco</li>
-          <li>Guarde sempre uma cópia de segurança de suas chaves privadas</li>
-          <li>Transações na blockchain são irreversíveis</li>
+          <li>Always verify contract addresses before approving transactions</li>
+          <li>Configure appropriate slippage to avoid transaction failures</li>
+          <li>This service is experimental - use at your own risk</li>
+          <li>Always keep a backup copy of your private keys</li>
+          <li>Blockchain transactions are irreversible</li>
         </ul>
       </div>
     </div>
