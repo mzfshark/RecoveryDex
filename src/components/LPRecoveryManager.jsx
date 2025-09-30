@@ -529,6 +529,29 @@ const LPRecoveryManager = () => {
         </button>
       </div>
 
+      {/* LP List */}
+      {loading ? (
+        <ProgressBar />
+      ) : userLPs.length > 0 ? (
+        <div className={styles.lpList}>
+          {userLPs.map((lp, index) => (
+            <LPCard key={`${lp.pairAddress}-${index}`} lp={lp} index={index} />
+          ))}
+        </div>
+      ) : (
+        <div className={styles.emptyState}>
+          <p>No LP found. Use the search field above to look for LPs.</p>
+          {!isConnected && (
+            <button
+              className={`${styles.button} ${styles.buttonPrimary}`}
+              onClick={() => open()}
+            >
+              Connect Wallet
+            </button>
+          )}
+        </div>
+      )}
+
       {/* DEX Filter */}
       <DexFilter />
 
@@ -557,28 +580,7 @@ const LPRecoveryManager = () => {
         </div>
       )}
 
-      {/* LP List */}
-      {loading ? (
-        <ProgressBar />
-      ) : userLPs.length > 0 ? (
-        <div className={styles.lpList}>
-          {userLPs.map((lp, index) => (
-            <LPCard key={`${lp.pairAddress}-${index}`} lp={lp} index={index} />
-          ))}
-        </div>
-      ) : (
-        <div className={styles.emptyState}>
-          <p>No LP found. Use the search field above to look for LPs.</p>
-          {!isConnected && (
-            <button
-              className={`${styles.button} ${styles.buttonPrimary}`}
-              onClick={() => open()}
-            >
-              Connect Wallet
-            </button>
-          )}
-        </div>
-      )}
+
 
       {/* Additional information */}
       <div className={styles.infoSection}>
