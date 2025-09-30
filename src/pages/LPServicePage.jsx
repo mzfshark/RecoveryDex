@@ -22,8 +22,6 @@ const LPServicePage = () => {
       <div className={styles.disclaimer}>
         <h3>⚠️ Important Warning:</h3>
         <ul>
-          <li>Always verify contract addresses before approving transactions</li>
-          <li>Configure appropriate slippage to avoid transaction failures</li>
           <li>This service is experimental - use at your own risk</li>
           <li>Always keep a backup copy of your private keys</li>
           <li>Blockchain transactions are irreversible</li>
