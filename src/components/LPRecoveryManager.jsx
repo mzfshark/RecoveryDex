@@ -248,7 +248,22 @@ const LPRecoveryManager = () => {
   const formatTokenAmount = (amount, symbol, decimals = 4) => {
     const num = parseFloat(amount);
     if (num === 0) return "0";
-    if (num < 0.0001) return "< 0.0001";
+    
+    // For very small numbers, show in scientific notation
+    if (num > 0 && num < 0.000001) {
+      return num.toExponential(3);
+    }
+    
+    // For small but readable numbers, show more decimals
+    if (num < 0.0001) {
+      return num.toFixed(8).replace(/\.?0+$/, '');
+    }
+    
+    // For larger numbers, use standard formatting
+    if (num < 1) {
+      return num.toFixed(6).replace(/\.?0+$/, '');
+    }
+    
     return num.toFixed(decimals);
   };
 
@@ -442,11 +457,25 @@ const LPRecoveryManager = () => {
         <div className={styles.tokenAmounts}>
           <div className={styles.tokenAmount}>
             <span>{lp.token0.symbol}:</span>
-            <span>{formatTokenAmount(lp.token0.formattedAmount)}</span>
+            <span>
+              {formatTokenAmount(lp.token0.formattedAmount)}
+              {parseFloat(lp.token0.formattedAmount) > 0 && parseFloat(lp.token0.formattedAmount) < 0.000001 && (
+                <small style={{opacity: 0.7, fontSize: '0.8em', marginLeft: '4px'}}>
+                  (raw: {lp.token0.formattedAmount})
+                </small>
+              )}
+            </span>
           </div>
           <div className={styles.tokenAmount}>
             <span>{lp.token1.symbol}:</span>
-            <span>{formatTokenAmount(lp.token1.formattedAmount)}</span>
+            <span>
+              {formatTokenAmount(lp.token1.formattedAmount)}
+              {parseFloat(lp.token1.formattedAmount) > 0 && parseFloat(lp.token1.formattedAmount) < 0.000001 && (
+                <small style={{opacity: 0.7, fontSize: '0.8em', marginLeft: '4px'}}>
+                  (raw: {lp.token1.formattedAmount})
+                </small>
+              )}
+            </span>
           </div>
         </div>
         

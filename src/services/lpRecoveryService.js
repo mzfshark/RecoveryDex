@@ -169,10 +169,12 @@ class LPRecoveryService {
         token1Contract.decimals()
       ]);
 
-      // Calculate amount of tokens user will receive
-      const userShare = (balance * 10000n) / totalSupply; // percentage * 100 for higher precision
-      const token0Amount = (reserves.reserve0 * userShare) / 10000n;
-      const token1Amount = (reserves.reserve1 * userShare) / 10000n;
+      // Calculate amount of tokens user will receive with higher precision
+      // Use 1e18 multiplier for better precision with small balances
+      const PRECISION = 1000000000000000000n; // 1e18
+      const userShare = (balance * PRECISION) / totalSupply;
+      const token0Amount = (reserves.reserve0 * userShare) / PRECISION;
+      const token1Amount = (reserves.reserve1 * userShare) / PRECISION;
 
       return {
         pairAddress,
@@ -193,7 +195,7 @@ class LPRecoveryService {
           amount: token1Amount,
           formattedAmount: ethers.formatUnits(token1Amount, token1Decimals)
         },
-        userShare: Number(userShare) / 100, // percentage
+        userShare: Number(userShare * 100n / PRECISION) / 100, // percentage
         formattedBalance: ethers.formatUnits(balance, 18)
       };
     } catch (error) {
