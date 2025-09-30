@@ -1287,6 +1287,28 @@ footer { padding: 5px; }
   margin-bottom: var(--space-xs);
 }
 
+.optimizationInfo {
+  margin-top: var(--space-md);
+  padding: var(--space-md);
+  background: linear-gradient(135deg, rgba(74, 222, 128, 0.1), rgba(34, 197, 94, 0.1));
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(74, 222, 128, 0.2);
+}
+
+.optimizationInfo h4 {
+  color: #22c55e;
+  margin-bottom: var(--space-xs);
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.optimizationInfo p {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0;
+}
+
 .supportedDexs {
   margin-top: var(--space-md);
 }

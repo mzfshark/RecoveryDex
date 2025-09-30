@@ -12,7 +12,8 @@ const LPServicePage = () => {
           Recover your liquidity tokens from Uniswap V2 pairs on all supported DEXs on Harmony.
         </p>
         <p>
-          This service allows you to find and remove liquidity from your forgotten or lost LPs.
+          This service uses an optimized Blockscout API method for fast discovery, 
+          with automatic fallback to full blockchain scan if needed.
         </p>
       </div>
       

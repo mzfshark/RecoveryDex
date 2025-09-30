@@ -4,6 +4,7 @@ import { getProvider } from "./provider.js";
 import { notify } from "./notificationService.js";
 import factoryList from "../factory.json";
 import ERC20ABI from "../abis/ERC20ABI.json";
+import blockscoutService from "./blockscoutService.js";
 
 // Minimal required ABIs
 const UNISWAP_V2_PAIR_ABI = [
@@ -408,6 +409,210 @@ class LPRecoveryService {
     } catch (error) {
       console.warn("[LPRecovery] Error estimating gas:", error);
       return null;
+    }
+  }
+
+  /**
+   * Optimized method: Get user LPs using Blockscout API
+   * Much faster than scanning all pairs - only validates user's actual tokens
+   */
+  async getUserLPsOptimized(userAddress, onProgress = null) {
+    if (!ethers.isAddress(userAddress)) {
+      throw new Error("Invalid address");
+    }
+
+    console.log(`[LPRecovery] Starting optimized LP discovery for ${userAddress}`);
+    
+    if (onProgress) {
+      onProgress({
+        currentDex: 'Blockscout API',
+        currentDexIndex: 1,
+        totalDexs: 1,
+        foundLPs: 0,
+        currentPair: 0,
+        totalPairsInDex: 0,
+        maxPairsToCheck: 0,
+        pairsChecked: 0,
+        isSearching: true
+      });
+    }
+    
+    try {
+      // Step 1: Get potential LP tokens from Blockscout
+      const potentialLPs = await blockscoutService.getLPTokensForAddress(userAddress);
+      
+      if (potentialLPs.length === 0) {
+        console.log('[LPRecovery] No LP tokens found in wallet via Blockscout');
+        notify.info("Info", "No LP tokens found in wallet", 3000);
+        return [];
+      }
+      
+      console.log(`[LPRecovery] Found ${potentialLPs.length} potential LP tokens, validating...`);
+      notify.info("Processing", `Validating ${potentialLPs.length} potential LP tokens...`, 3000);
+      
+      // Step 2: Validate and get details for each LP
+      const validatedLPs = [];
+      const factories = Object.entries(factoryList.UNISWAP.FACTORY);
+      
+      // Update progress with validation info
+      if (onProgress) {
+        onProgress({
+          currentDex: 'Validating LPs',
+          currentDexIndex: 1,
+          totalDexs: 1,
+          foundLPs: 0,
+          currentPair: 0,
+          totalPairsInDex: potentialLPs.length,
+          maxPairsToCheck: potentialLPs.length,
+          pairsChecked: 0,
+          isSearching: true
+        });
+      }
+      
+      for (let i = 0; i < potentialLPs.length; i++) {
+        const lpToken = potentialLPs[i];
+        
+        // Update progress
+        if (onProgress) {
+          onProgress({
+            currentDex: 'Validating LPs',
+            currentDexIndex: 1,
+            totalDexs: 1,
+            foundLPs: validatedLPs.length,
+            currentPair: i + 1,
+            totalPairsInDex: potentialLPs.length,
+            maxPairsToCheck: potentialLPs.length,
+            pairsChecked: i + 1,
+            isSearching: true
+          });
+        }
+        
+        try {
+          console.log(`[LPRecovery] Validating ${lpToken.symbol} (${lpToken.address})`);
+          
+          // Try to create pair contract and validate it's a real LP
+          const pairContract = new ethers.Contract(lpToken.address, UNISWAP_V2_PAIR_ABI, this.provider);
+          
+          // Check if it's a valid pair contract by trying to get pair info
+          const [token0, token1, reserves, balance, totalSupply, symbol] = await Promise.all([
+            pairContract.token0(),
+            pairContract.token1(), 
+            pairContract.getReserves(),
+            pairContract.balanceOf(userAddress),
+            pairContract.totalSupply(),
+            pairContract.symbol()
+          ]);
+          
+          // Skip if user has no balance
+          if (balance === 0n) {
+            console.log(`[LPRecovery] ❌ No balance in ${lpToken.symbol}`);
+            continue;
+          }
+          
+          // Find which factory this pair belongs to
+          let factoryAddress = null;
+          let factoryName = null;
+          
+          for (const [name, address] of factories) {
+            try {
+              const factoryContract = new ethers.Contract(address, UNISWAP_V2_FACTORY_ABI, this.provider);
+              const expectedPair = await factoryContract.getPair(token0, token1);
+              
+              if (expectedPair.toLowerCase() === lpToken.address.toLowerCase()) {
+                factoryAddress = address;
+                factoryName = name;
+                break;
+              }
+            } catch (e) {
+              // Continue to next factory
+            }
+          }
+          
+          if (factoryAddress) {
+            // Get token details
+            const token0Contract = new ethers.Contract(token0, ERC20ABI, this.provider);
+            const token1Contract = new ethers.Contract(token1, ERC20ABI, this.provider);
+            
+            const [token0Symbol, token1Symbol, token0Decimals, token1Decimals] = await Promise.all([
+              token0Contract.symbol(),
+              token1Contract.symbol(),
+              token0Contract.decimals(),
+              token1Contract.decimals()
+            ]);
+            
+            // Calculate user share and token amounts with high precision
+            const PRECISION = 1000000000000000000n; // 1e18
+            const userShare = (balance * PRECISION) / totalSupply;
+            const token0Amount = (reserves.reserve0 * userShare) / PRECISION;
+            const token1Amount = (reserves.reserve1 * userShare) / PRECISION;
+            
+            const lpData = {
+              pairAddress: lpToken.address,
+              factoryAddress,
+              factoryName,
+              balance,
+              totalSupply,
+              symbol,
+              token0: {
+                address: token0,
+                symbol: token0Symbol,
+                decimals: token0Decimals,
+                amount: token0Amount,
+                formattedAmount: ethers.formatUnits(token0Amount, token0Decimals)
+              },
+              token1: {
+                address: token1,
+                symbol: token1Symbol,
+                decimals: token1Decimals,
+                amount: token1Amount,
+                formattedAmount: ethers.formatUnits(token1Amount, token1Decimals)
+              },
+              userShare: Number(userShare * 100n / PRECISION) / 100, // percentage
+              formattedBalance: ethers.formatUnits(balance, 18)
+            };
+            
+            validatedLPs.push(lpData);
+            console.log(`[LPRecovery] ✅ Validated LP: ${token0Symbol}/${token1Symbol} on ${factoryName}`);
+          } else {
+            console.log(`[LPRecovery] ❌ Could not find factory for LP: ${lpToken.symbol} (${lpToken.address})`);
+          }
+          
+        } catch (error) {
+          console.log(`[LPRecovery] ❌ Failed to validate LP ${lpToken.symbol}:`, error.message);
+        }
+        
+        // Small delay to avoid rate limiting
+        await new Promise(resolve => setTimeout(resolve, 100));
+      }
+      
+      // Final progress update
+      if (onProgress) {
+        onProgress({
+          currentDex: 'Complete',
+          currentDexIndex: 1,
+          totalDexs: 1,
+          foundLPs: validatedLPs.length,
+          currentPair: potentialLPs.length,
+          totalPairsInDex: potentialLPs.length,
+          maxPairsToCheck: potentialLPs.length,
+          pairsChecked: potentialLPs.length,
+          isSearching: false
+        });
+      }
+      
+      console.log(`[LPRecovery] ✅ Optimized discovery completed: ${validatedLPs.length} valid LPs found`);
+      
+      if (validatedLPs.length > 0) {
+        notify.success("Found", `${validatedLPs.length} LP(s) found using optimized method`, 3000);
+      } else {
+        notify.info("Info", "No valid LP tokens found", 3000);
+      }
+      
+      return validatedLPs;
+      
+    } catch (error) {
+      console.error('[LPRecovery] Error in optimized LP discovery:', error);
+      throw error;
     }
   }
 
