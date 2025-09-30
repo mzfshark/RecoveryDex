@@ -174,7 +174,7 @@
 }
 
 /* responsive */
-@media screen and (max-width: 765px) {
+@media screen and (max-width: 821px) {
   :root {
     --sc-width: 310px;
     --if-width: 190px;
@@ -199,7 +199,7 @@
   }
 
   .hidden {
-    display: none;
+    display: none !important;
   }
 
   .Icon {
@@ -229,7 +229,6 @@
     --r-mbt: 30%;
   }
   .mobileNav { display: none; }
-
   .headerNav {
     display: flex;
     justify-content: space-between;
@@ -558,7 +557,7 @@ footer { padding: 5px; }
 .routeImage { width: 16px; margin: 0 var(--space-xs); border-radius: 50px; }
 
 /* small helpers */
-.hidden { display: none; }
+.hidden { display: inline; }
 .center { display:flex; align-items:center; justify-content:center; }
 .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 

@@ -15,7 +15,7 @@ const navItems = [
   { path: "/swap", icon: RiTokenSwapLine,  label: "Swap" },
   { path: "/transactions", icon: TbTransactionBitcoin, label: "Transactions"},
   { path: "/liquidity", icon: MdDashboard, label: "Liquidity" },
-  { path: "/lp-service", icon: BiCoin, label: "LP Recovery" },
+  { path: "/lp-service", icon: BiCoin, label: "LP Manager" },
 
 ];
 
@@ -43,7 +43,7 @@ const Navigation = () => (
           `${styles.navItem} ${isActive ? styles.active : ""}`
         }
       >
-        <Icon className={styles.Icon} />
+        <Icon className={styles.Icon} alt={label} />
         <span className={styles.hidden}>{label}</span>
       </NavLink>
     ))}
