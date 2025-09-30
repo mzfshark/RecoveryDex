@@ -20,10 +20,13 @@ const UNISWAP_V2_PAIR_ABI = [
   // Liquidity removal functions
   "function approve(address spender, uint256 amount) returns (bool)",
   "function allowance(address owner, address spender) view returns (uint256)",
+  "function transfer(address to, uint256 amount) returns (bool)",
+  "function burn(address to) returns (uint256 amount0, uint256 amount1)",
   
   // Events
   "event Transfer(address indexed from, address indexed to, uint256 value)",
-  "event Approval(address indexed owner, address indexed spender, uint256 value)"
+  "event Approval(address indexed owner, address indexed spender, uint256 value)",
+  "event Burn(address indexed sender, uint256 amount0, uint256 amount1, address indexed to)"
 ];
 
 const UNISWAP_V2_FACTORY_ABI = [
@@ -43,9 +46,11 @@ const FACTORY_TO_ROUTER = {
   "0x7D02c116b98d0965ba7B642ace0183ad8b8D2196": "0xf012702a5f0e54015362cBCA26a26fc90AA832a3", // ViperSwap
   "0xc35DADB65012eC5796536bD9864eD8773aBc74C4": "0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506", // SushiSwap
   "0x9014B937069918bd319f80e8B3BB4A2cf6FAA5F7": "0x24ad62502d1C652Cc7684081169D04896aC20f30", // DFK
-  
-  // Add more as needed
+  "0xF166939E9130b03f721B0aE5352CCCa690a7726a": "0x3E9CD1f4eF9C5c7C7C0d36B71D574042f0cE4174", // Defira
 };
+
+// Fallback router address (ViperSwap router - most compatible on Harmony)
+const FALLBACK_ROUTER = "0xf012702a5f0e54015362cBCA26a26fc90AA832a3";
 
 const WONE_ADDRESS = "0xcF664087a5bB0237a0BAd6742852ec6c8d69A27a";
 
@@ -205,9 +210,12 @@ class LPRecoveryService {
       throw new Error("Signer required to remove liquidity");
     }
 
-    const routerAddress = FACTORY_TO_ROUTER[lpData.factoryAddress];
+    // Try to get specific router, fallback to ViperSwap router if not found
+    let routerAddress = FACTORY_TO_ROUTER[lpData.factoryAddress];
     if (!routerAddress) {
-      throw new Error(`Router not found for factory ${lpData.factoryAddress}`);
+      console.warn(`[LPRecovery] Router not found for factory ${lpData.factoryAddress}, using fallback router`);
+      routerAddress = FALLBACK_ROUTER;
+      notify.info("Info", "Using fallback router for this LP removal", 5000);
     }
 
     try {
@@ -273,9 +281,31 @@ class LPRecoveryService {
       notify.success("Success", `Liquidity removed! Hash: ${receipt.hash.slice(0, 10)}...`, 5000);
       return receipt;
     } catch (error) {
-      console.error("[LPRecovery] Error removing liquidity:", error);
-      notify.error("Error", "Error removing liquidity: " + error.message);
-      throw error;
+      console.error("[LPRecovery] Router method failed:", error);
+      
+      // Try direct burn method as fallback
+      try {
+        console.log("[LPRecovery] Attempting direct burn method...");
+        notify.info("Retrying", "Trying alternative removal method...", 5000);
+        
+        const pairContract = new ethers.Contract(lpData.pairAddress, UNISWAP_V2_PAIR_ABI, this.signer);
+        const userAddress = await this.signer.getAddress();
+        
+        // Transfer LP tokens to the pair contract
+        const transferTx = await pairContract.transfer(lpData.pairAddress, lpData.balance);
+        await transferTx.wait();
+        
+        // Burn the tokens to get underlying tokens back
+        const burnTx = await pairContract.burn(userAddress);
+        const receipt = await burnTx.wait();
+        
+        notify.success("Success", `Liquidity removed via burn! Hash: ${receipt.hash.slice(0, 10)}...`, 5000);
+        return receipt;
+      } catch (burnError) {
+        console.error("[LPRecovery] Direct burn also failed:", burnError);
+        notify.error("Error", "All removal methods failed: " + burnError.message);
+        throw burnError;
+      }
     }
   }
 
@@ -382,7 +412,7 @@ class LPRecoveryService {
   /**
    * Search for all LPs that the user owns with progress callbacks
    */
-  async getUserLPsWithProgress(userAddress, onProgress) {
+  async getUserLPsWithProgress(userAddress, onProgress, filteredDexs = null) {
     if (!ethers.isAddress(userAddress)) {
       throw new Error("Invalid address");
     }
@@ -390,14 +420,26 @@ class LPRecoveryService {
     notify.info("Searching", "Looking for user's LPs...", 5000);
     
     const userLPs = [];
-    const factories = Object.values(factoryList.UNISWAP.FACTORY);
-    const factoryNames = Object.keys(factoryList.UNISWAP.FACTORY);
+    
+    // Filter DEXs if provided
+    let factoriesToSearch = [];
+    let factoryNamesToSearch = [];
+    
+    if (filteredDexs && filteredDexs.length > 0) {
+      // Use only filtered DEXs
+      factoryNamesToSearch = filteredDexs;
+      factoriesToSearch = filteredDexs.map(dexName => factoryList.UNISWAP.FACTORY[dexName]);
+    } else {
+      // Use all DEXs
+      factoryNamesToSearch = Object.keys(factoryList.UNISWAP.FACTORY);
+      factoriesToSearch = Object.values(factoryList.UNISWAP.FACTORY);
+    }
 
     try {
       // For each factory, search all pairs and check if user has LP tokens
-      for (let factoryIndex = 0; factoryIndex < factories.length; factoryIndex++) {
-        const factoryAddress = factories[factoryIndex];
-        const factoryName = factoryNames[factoryIndex];
+      for (let factoryIndex = 0; factoryIndex < factoriesToSearch.length; factoryIndex++) {
+        const factoryAddress = factoriesToSearch[factoryIndex];
+        const factoryName = factoryNamesToSearch[factoryIndex];
         
         // Update progress - starting new DEX
         onProgress({
@@ -472,7 +514,7 @@ class LPRecoveryService {
       // Final progress update
       onProgress({
         currentDex: 'Complete',
-        currentDexIndex: factories.length,
+        currentDexIndex: factoriesToSearch.length,
         foundLPs: userLPs.length,
         currentPair: 0,
         totalPairsInDex: 0

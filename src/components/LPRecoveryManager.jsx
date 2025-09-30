@@ -66,6 +66,10 @@ const LPRecoveryManager = () => {
   const [searchAddress, setSearchAddress] = useState('');
   const [processing, setProcessing] = useState(false);
   
+  // DEX filter states
+  const [selectedDexs, setSelectedDexs] = useState(new Set()); // Empty = ALL
+  const [showDexFilter, setShowDexFilter] = useState(false);
+  
   // Progress tracking states
   const [searchProgress, setSearchProgress] = useState({
     currentDex: '',
@@ -119,11 +123,12 @@ const LPRecoveryManager = () => {
     setUserLPs([]);
     setSelectedLPs(new Set());
     
-    // Reset progress
+    // Reset progress with filtered DEXs count
+    const dexsToSearch = getFilteredDexs();
     setSearchProgress({
       currentDex: '',
       currentDexIndex: 0,
-      totalDexs: supportedDexs.length,
+      totalDexs: dexsToSearch.length,
       foundLPs: 0,
       currentPair: 0,
       totalPairsInDex: 0,
@@ -143,7 +148,10 @@ const LPRecoveryManager = () => {
         }));
       };
       
-      const lps = await lpRecoveryService.getUserLPsWithProgress(addressToSearch, onProgress);
+      // Get filtered DEXs to search
+      const dexsToSearch = getFilteredDexs();
+      
+      const lps = await lpRecoveryService.getUserLPsWithProgress(addressToSearch, onProgress, dexsToSearch);
       setUserLPs(lps);
       
       if (lps.length === 0) {
@@ -242,6 +250,92 @@ const LPRecoveryManager = () => {
     if (num === 0) return "0";
     if (num < 0.0001) return "< 0.0001";
     return num.toFixed(decimals);
+  };
+
+  // DEX filter functions
+  const toggleDexSelection = (dexKey) => {
+    const newSelected = new Set(selectedDexs);
+    if (newSelected.has(dexKey)) {
+      newSelected.delete(dexKey);
+    } else {
+      newSelected.add(dexKey);
+    }
+    setSelectedDexs(newSelected);
+  };
+
+  const selectAllDexs = () => {
+    if (selectedDexs.size === supportedDexs.length) {
+      setSelectedDexs(new Set()); // Clear all = ALL
+    } else {
+      setSelectedDexs(new Set(supportedDexs)); // Select all
+    }
+  };
+
+  const clearDexSelection = () => {
+    setSelectedDexs(new Set()); // Clear = ALL
+  };
+
+  const getFilteredDexs = () => {
+    // If no DEX selected, return all (ALL mode)
+    if (selectedDexs.size === 0) {
+      return supportedDexs;
+    }
+    return Array.from(selectedDexs);
+  };
+
+  // DEX Filter Component
+  const DexFilter = () => {
+    const isAllSelected = selectedDexs.size === 0;
+    const selectedCount = selectedDexs.size;
+
+    return (
+      <div className={styles.dexFilterContainer}>
+        <div className={styles.filterHeader}>
+          <button
+            className={`${styles.button} ${styles.buttonSecondary}`}
+            onClick={() => setShowDexFilter(!showDexFilter)}
+          >
+            {showDexFilter ? '▼' : '▶'} DEX Filter 
+            <span className={styles.filterBadge}>
+              {isAllSelected ? 'ALL' : `${selectedCount} selected`}
+            </span>
+          </button>
+          
+          {showDexFilter && (
+            <div className={styles.filterActions}>
+              <button
+                className={`${styles.button} ${styles.buttonSmall}`}
+                onClick={selectAllDexs}
+              >
+                {selectedDexs.size === supportedDexs.length ? 'Clear All' : 'Select All'}
+              </button>
+              <button
+                className={`${styles.button} ${styles.buttonSmall}`}
+                onClick={clearDexSelection}
+              >
+                ALL
+              </button>
+            </div>
+          )}
+        </div>
+
+        {showDexFilter && (
+          <div className={styles.dexGrid}>
+            {supportedDexs.map((dexKey) => (
+              <label key={dexKey} className={styles.dexCheckbox}>
+                <input
+                  type="checkbox"
+                  checked={selectedDexs.has(dexKey)}
+                  onChange={() => toggleDexSelection(dexKey)}
+                />
+                <span className={styles.dexCheckmark}></span>
+                <span className={styles.dexName}>{formatDexName(dexKey)}</span>
+              </label>
+            ))}
+          </div>
+        )}
+      </div>
+    );
   };
 
   // Progress Bar Component
@@ -406,6 +500,9 @@ const LPRecoveryManager = () => {
         </button>
       </div>
 
+      {/* DEX Filter */}
+      <DexFilter />
+
       {/* Selection controls */}
       {userLPs.length > 0 && (
         <div className={styles.selectionControls}>
@@ -465,9 +562,14 @@ const LPRecoveryManager = () => {
         </ul>
         
         <div className={styles.supportedDexs}>
-          <h4>Supported DEXs ({supportedDexs.length}):</h4>
+          <h4>
+            {selectedDexs.size === 0 
+              ? `All DEXs (${supportedDexs.length}):` 
+              : `Selected DEXs (${selectedDexs.size} of ${supportedDexs.length}):`
+            }
+          </h4>
           <div className={styles.dexList}>
-            {supportedDexs.map((dexKey) => (
+            {getFilteredDexs().map((dexKey) => (
               <span key={dexKey}>{formatDexName(dexKey)}</span>
             ))}
           </div>

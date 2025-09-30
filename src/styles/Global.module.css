@@ -1476,6 +1476,146 @@ footer { padding: 5px; }
   text-align: center;
 }
 
+/* =========================
+   DEX FILTER STYLES
+   ========================= */
+
+.dexFilterContainer {
+  background: var(--foreground);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-lg);
+  overflow: hidden;
+}
+
+.filterHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-md);
+  border-bottom: 1px solid var(--gray-200);
+  background: var(--card-bg);
+}
+
+.filterHeader button {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  background: none;
+  border: none;
+  font-weight: 600;
+  color: var(--text-primary);
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.filterBadge {
+  background: var(--primary);
+  color: var(--txt-bt-white);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-left: var(--space-sm);
+}
+
+.filterActions {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.buttonSmall {
+  padding: var(--space-xs) var(--space-sm);
+  font-size: 0.75rem;
+}
+
+.dexGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  background: var(--foreground);
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+@media (max-width: 768px) {
+  .dexGrid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: var(--space-xs);
+  }
+}
+
+.dexCheckbox {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  background: var(--card-bg);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  user-select: none;
+}
+
+.dexCheckbox:hover {
+  background: var(--primary);
+  color: var(--txt-bt-white);
+  border-color: var(--primary);
+}
+
+.dexCheckbox input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.dexCheckmark {
+  position: relative;
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background: var(--input-bg);
+  border: 2px solid var(--gray-200);
+  border-radius: 3px;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.dexCheckbox input:checked ~ .dexCheckmark {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+
+.dexCheckbox:hover .dexCheckmark {
+  background: var(--txt-bt-white);
+  border-color: var(--txt-bt-white);
+}
+
+.dexCheckbox input:checked ~ .dexCheckmark:after {
+  content: "";
+  position: absolute;
+  display: block;
+  left: 4px;
+  top: 1px;
+  width: 4px;
+  height: 8px;
+  border: solid var(--txt-bt-white);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.dexCheckbox:hover input:checked ~ .dexCheckmark:after {
+  border-color: var(--primary);
+}
+
+.dexName {
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: color var(--transition-fast);
+}
+
 .disclaimer li {
   margin-bottom: var(--space-xs);
 }
