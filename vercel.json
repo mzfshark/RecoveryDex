@@ -74,6 +74,10 @@
       "destination": "/"
     }
   ],
+  "ignoreCommand": "if [ \"$VERCEL_GIT_COMMIT_REF\" = \"docs\" ]; then exit 0; else exit 1; fi",
+  "ignore": [
+    "docs/**"
+  ],
   "buildCommand": "pnpm run build",
   "outputDirectory": "dist",
   "installCommand": "pnpm install --no-frozen-lockfile",
